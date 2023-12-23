@@ -12,6 +12,14 @@ beta. Please report any issues you find.
 pip install geckoterminal-api
 ```
 
+## Usage
+
+```python
+from geckoterminal_api import GeckoTerminalAPI
+
+gt = GeckoTerminalAPI()
+```
+
 ## Disclaimer
 
 This project is for educational purposes only. You should not construe any such
