@@ -32,3 +32,7 @@ jobs:
       - name: Test API
         run: |
           poetry run coverage run -m pytest tests/test_api.py -v
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
