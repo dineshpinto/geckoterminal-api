@@ -31,7 +31,7 @@ jobs:
         run: poetry install --with test
       - name: Test API
         run: |
-          poetry run coverage run -m pytest tests/test_api.py -v
+          poetry run pytest --cov -v
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
