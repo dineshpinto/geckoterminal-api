@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "geckoterminal-api"
+version = "0.1.0"
+repository = "https://github.com/dineshpinto/geckoterminal-api"
+homepage = "https://github.com/dineshpinto/geckoterminal-api"
+license = "MIT"
+keywords = ["geckoterminal", "coingecko", "rest", "api", "cryptocurrency", "bitcoin", "ethereum", "solana"]
+description = "RESTful Python client for GeckoTerminal API"
+authors = ["dineshpinto <annual.fallout_0z@icloud.com>"]
+readme = "README.md"
+packages = [{ include = "geckoterminal_api" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.9"
+ruff-lsp = "^0.0.48"
+jupyterlab = "^4.0.9"
+matplotlib = "^3.8.2"
+seaborn = "^0.13.0"
+
+
+[tool.poetry.group.test.dependencies]
+coverage = "^7.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+extend-select = [
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "ERA", # flake8-eradicate/eradicate
+    "I", # isort
+    "N", # pep8-naming
+    "PIE", # flake8-pie
+    "PGH", # pygrep
+    "RUF", # ruff checks
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "TID", # flake8-tidy-imports
+    "UP", # pyupgrade
+]
