@@ -1,3 +1,4 @@
+import json
 import warnings
 from functools import wraps
 from typing import Optional
@@ -61,7 +62,10 @@ class GeckoTerminalAPI:
         if response.status_code == 200:
             return response.json()
         else:
-            raise GeckoTerminalAPIError(status=response.status_code, err=response.text)
+            raise GeckoTerminalAPIError(
+                status=response.status_code,
+                err=json.loads(response.text)["errors"][0]["title"],
+            )
 
     def networks(self, page: int = 1) -> dict:
         """Get list of supported networks
@@ -71,11 +75,11 @@ class GeckoTerminalAPI:
         """
         return self._get(endpoint="/networks", params={"page": page})
 
-    def dexes(self, network: str, page: int = 1) -> dict:
+    def network_dexes(self, network: str, page: int = 1) -> dict:
         """Get list of supported dexes on a network
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             page: Page through results (default 1)
         """
         return self._get(endpoint=f"/networks/{network}/dexes", params={"page": page})
@@ -103,7 +107,7 @@ class GeckoTerminalAPI:
         """Get trending pools on a network
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
             page: Page through results (default 1)
@@ -124,7 +128,7 @@ class GeckoTerminalAPI:
         """Get specific pool on a network
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             address: Address of pool e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
@@ -145,7 +149,7 @@ class GeckoTerminalAPI:
         """Get multiple pools on a network
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             addresses: List of pool addresses
                 e.g. ["0x60594a405d53811d3bc4766596efd80fd545a270",
                 "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"]
@@ -155,7 +159,7 @@ class GeckoTerminalAPI:
         if include is None:
             include = ["base_token", "quote_token", "dex"]
         return self._get(
-            endpoint=f"/networks/{network}/pools/multi/{'%'.join(addresses)}",
+            endpoint=f"/networks/{network}/pools/multi/{','.join(addresses)}",
             params={
                 "include": ",".join(include),
             },
@@ -167,7 +171,7 @@ class GeckoTerminalAPI:
         """Get top pools on a network
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
             page: Page through results (default 1)
@@ -185,8 +189,8 @@ class GeckoTerminalAPI:
         """Get top pools on a network's dex
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
-            dex: Dex id from `dexes()` e.g. "sushiswap"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
+            dex: Dex id from `dexes()` e.g. sushiswap, raydium, uniswap_v3
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
             page: Page through results (default 1)
@@ -205,7 +209,7 @@ class GeckoTerminalAPI:
         """Get new pools on a network
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
             page: Page through results (default 1)
@@ -246,7 +250,7 @@ class GeckoTerminalAPI:
         Args:
             query: Search query: can be pool address, token address, or token symbol
                 e.g. "ETH"
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
             page: Page through results (default 1)
@@ -268,11 +272,11 @@ class GeckoTerminalAPI:
         """Get current USD prices of multiple tokens on a network
 
         Args:
-            network: Network id from `networks()` e.g. "eth"
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
             addresses: List of token addresses
-                e.g. ["0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-                "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"]
+                e.g. ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"]
         """
         return self._get(
-            endpoint=f"/simple/networks/{network}/token_price/{'%'.join(addresses)}",
+            endpoint=f"/simple/networks/{network}/token_price/{','.join(addresses)}",
         )
