@@ -31,7 +31,7 @@ jobs:
         run: poetry install --with test
       - name: Test API
         run: |
-          poetry run pytest --cov-report xml -v
+          poetry run pytest --cov-report xml --cov=geckoterminal_api -v
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
