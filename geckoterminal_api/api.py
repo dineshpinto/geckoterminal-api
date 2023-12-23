@@ -9,24 +9,22 @@ from .exceptions import GeckoTerminalAPIError, GeckoTerminalParameterWarning
 class GeckoTerminalAPI:
     """RESTful Python client for GeckoTerminal API."""
 
-    def __init__(self, api_version: str | None = None):
+    def __init__(self, api_version: Optional[str] = None):
         """
         Args:
             api_version: GeckoTerminal API version, if None latest will be used
         """
         self.api_version = api_version
-        self._base_url = "https://api.geckoterminal.com/api/v2"
+        self.base_url = "https://api.geckoterminal.com/api/v2"
         self._session = requests.Session()
 
-    def _get(self, endpoint: str, params: dict | None = None) -> dict:
-        if self.api_version:
-            accept_header = f"application/json;version={self.api_version}"
-        else:
-            accept_header = "application/json"
+    def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
         headers = {
-            "accept": accept_header,
+            "accept": f"application/json;version={self.api_version}"
+            if self.api_version
+            else "application/json",
         }
-        url = self._base_url + endpoint
+        url = self.base_url + endpoint
         response = self._session.request(
             method="GET", url=url, params=params, headers=headers, timeout=30
         )
