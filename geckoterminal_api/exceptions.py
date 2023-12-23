@@ -7,3 +7,7 @@ class GeckoTerminalAPIError(Exception):
 
     def __str__(self):
         return f"(status={self.status}) {self.err}"
+
+
+class GeckoTerminalParameterWarning(Warning):
+    """Warning for (potentially) invalid parameters"""
