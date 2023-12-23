@@ -1,9 +1,38 @@
 import warnings
+from functools import wraps
 from typing import Optional
 
 import requests
 
 from .exceptions import GeckoTerminalAPIError, GeckoTerminalParameterWarning
+
+
+def validate_page(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if "page" in kwargs and kwargs["page"] > 10:
+            warnings.warn(
+                f"Maximum 10 pages allowed, {kwargs['page']} provided",
+                GeckoTerminalParameterWarning,
+                stacklevel=2,
+            )
+        return f(*args, **kwargs)
+
+    return wrapper
+
+
+def validate_addresses(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if "addresses" in kwargs and len(kwargs["addresses"]) > 30:
+            warnings.warn(
+                f"Maximum 30 addresses allowed, {len(args[1])} provided",
+                GeckoTerminalParameterWarning,
+                stacklevel=2,
+            )
+        return f(*args, **kwargs)
+
+    return wrapper
 
 
 class GeckoTerminalAPI:
@@ -34,26 +63,6 @@ class GeckoTerminalAPI:
         else:
             raise GeckoTerminalAPIError(status=response.status_code, err=response.text)
 
-    @staticmethod
-    def _validate_page(f, *args, **kwargs):
-        if "page" in kwargs and kwargs["page"] > 10:
-            warnings.warn(
-                f"Maximum 10 pages allowed, {kwargs['page']} provided",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        return f(*args, **kwargs)
-
-    @staticmethod
-    def _validate_addresses(f, *args, **kwargs):
-        if len(args[1]) > 30:
-            warnings.warn(
-                f"Maximum 30 addresses allowed, {len(args[1])} provided",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        return f(*args, **kwargs)
-
     def networks(self, page: int = 1) -> dict:
         """Get list of supported networks
 
@@ -71,7 +80,7 @@ class GeckoTerminalAPI:
         """
         return self._get(endpoint=f"/networks/{network}/dexes", params={"page": page})
 
-    @_validate_page
+    @validate_page
     def trending_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get trending pools across all networks
 
@@ -87,7 +96,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @_validate_page
+    @validate_page
     def network_trending_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -116,7 +125,7 @@ class GeckoTerminalAPI:
 
         Args:
             network: Network id from `networks()` e.g. "eth"
-            address: Address of pool
+            address: Address of pool e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
         """
@@ -129,7 +138,7 @@ class GeckoTerminalAPI:
             },
         )
 
-    @_validate_addresses
+    @validate_addresses
     def network_pools_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
@@ -177,7 +186,7 @@ class GeckoTerminalAPI:
 
         Args:
             network: Network id from `networks()` e.g. "eth"
-            dex: Dex id from `dexes()` e.g. "uniswap"
+            dex: Dex id from `dexes()` e.g. "sushiswap"
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
             page: Page through results (default 1)
@@ -189,7 +198,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @_validate_page
+    @validate_page
     def network_new_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -208,7 +217,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @_validate_page
+    @validate_page
     def new_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get new pools across all networks
 
@@ -224,7 +233,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @_validate_page
+    @validate_page
     def search_network_pool(
         self,
         query: str,
@@ -236,6 +245,7 @@ class GeckoTerminalAPI:
 
         Args:
             query: Search query: can be pool address, token address, or token symbol
+                e.g. "ETH"
             network: Network id from `networks()` e.g. "eth"
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
@@ -253,7 +263,7 @@ class GeckoTerminalAPI:
             },
         )
 
-    @_validate_addresses
+    @validate_addresses
     def network_addresses_token_price(self, network: str, addresses: list[str]) -> dict:
         """Get current USD prices of multiple tokens on a network
 
