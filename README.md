@@ -1,10 +1,16 @@
+[![PyPi version](https://img.shields.io/pypi/v/geckoterminal-api)](https://pypi.python.org/pypi/geckoterminal-api/)
+[![Downloads](https://static.pepy.tech/badge/geckoterminal-api)](https://pepy.tech/project/geckoterminal-api)
+[![Python 3.10](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
+[![API unittest](https://github.com/dineshpinto/geckoterminal-api/actions/workflows/unittests.yml/badge.svg)](https://github.com/dineshpinto/geckoterminal-api/actions/workflows/unittests.yml)
+
 # GeckoTerminal API
 
-## RESTful Python client for GeckoTerminal DeFi and DeX aggregator API
+## RESTful Python client for GeckoTerminal DeFi and DeX aggregator
 
-Wrapper around the [GeckoTerminal API](https://www.geckoterminal.com) DeFi and DeX
-aggregator across 90+ blockchains. This is an unofficial wrapper and is
-currently in beta. Please report any issues you find.
+Wrapper around the [GeckoTerminal](https://www.geckoterminal.com) DeFi and DeX
+aggregator operating across 90+ blockchains. This is an
+unofficial wrapper and is currently in beta.
+Please report any issues you find.
 
 ## Installation
 
