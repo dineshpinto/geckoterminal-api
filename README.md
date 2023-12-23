@@ -1,9 +1,10 @@
 # GeckoTerminal API
 
-## Unofficial Python client for GeckoTerminal API
+## RESTful Python client for GeckoTerminal DeFi and DeX aggregator API
 
 Wrapper around the [GeckoTerminal API](https://www.geckoterminal.com) DeFi and DeX
-aggregator across 90+ blockchains.
+aggregator across 90+ blockchains. This is an UNOFFICIAL wrapper and is currently in 
+beta. Please report any issues you find.
 
 ## Installation
 

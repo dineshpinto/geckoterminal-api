@@ -5,7 +5,7 @@ repository = "https://github.com/dineshpinto/geckoterminal-api"
 homepage = "https://github.com/dineshpinto/geckoterminal-api"
 license = "MIT"
 keywords = ["geckoterminal", "coingecko", "rest", "api", "cryptocurrency", "bitcoin", "ethereum", "solana"]
-description = "RESTful Python client for GeckoTerminal API"
+description = "RESTful Python client for GeckoTerminal DeFi and DeX aggregator API"
 authors = ["dineshpinto <annual.fallout_0z@icloud.com>"]
 readme = "README.md"
 packages = [{ include = "geckoterminal_api" }]
@@ -13,7 +13,7 @@ packages = [{ include = "geckoterminal_api" }]
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
-
+r
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.9"
