@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "geckoterminal-api"
-version = "0.1.0"
+version = "0.2.0"
 repository = "https://github.com/dineshpinto/geckoterminal-api"
 homepage = "https://github.com/dineshpinto/geckoterminal-api"
 license = "MIT"
 keywords = ["geckoterminal", "coingecko", "rest", "api", "cryptocurrency", "bitcoin", "ethereum", "solana"]
-description = "RESTful Python client for GeckoTerminal DeFi and DeX aggregator API"
+description = "RESTful Python client for GeckoTerminal DeFi and DeX aggregator"
 authors = ["dineshpinto <annual.fallout_0z@icloud.com>"]
 readme = "README.md"
 packages = [{ include = "geckoterminal_api" }]
@@ -22,8 +22,8 @@ matplotlib = "^3.8.2"
 seaborn = "^0.13.0"
 
 [tool.poetry.group.test.dependencies]
-coverage = "^7.3.4"
 pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
