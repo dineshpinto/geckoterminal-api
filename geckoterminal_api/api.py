@@ -388,11 +388,11 @@ class GeckoTerminalAPI:
         network: str,
         pool_address: str,
         timeframe: str,
-        aggregate: Optional[int] = None,
+        aggregate: Optional[int] = 1,
         before_timestamp: Optional[int] = None,
-        limit: Optional[int] = None,
-        currency: Optional[str] = None,
-        token: Optional[str] = None,
+        limit: Optional[int] = 100,
+        currency: Optional[str] = "usd",
+        token: Optional[str] = "base",
     ) -> dict:
         """Get OHLCV data of a pool
 
