@@ -4,7 +4,7 @@ from typing import Optional
 import requests
 
 from .exceptions import GeckoTerminalAPIError
-from .parameter_validation import (
+from .validation import (
     validate_addresses,
     validate_aggregate,
     validate_currency,
@@ -33,10 +33,12 @@ class GeckoTerminalAPI:
         self._session = requests.Session()
 
     def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
-        headers = {"accept": self.accept_header}
-        url = self.base_url + endpoint
         response = self._session.request(
-            method="GET", url=url, params=params, headers=headers, timeout=30
+            method="GET",
+            url=self.base_url + endpoint,
+            params=params,
+            headers={"accept": self.accept_header},
+            timeout=30,
         )
 
         match response.status_code:
@@ -364,7 +366,7 @@ class GeckoTerminalAPI:
             endpoint=f"/networks/{network}/tokens/{address}/info",
         )
 
-    def token_info_recently_updated(self, include: Optional[list] = None):
+    def token_info_recently_updated(self, include: Optional[list] = None) -> dict:
         """Get most recently updated 100 tokens info from all networks
 
         Args:
