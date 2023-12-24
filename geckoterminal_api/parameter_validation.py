@@ -4,13 +4,18 @@ from typing import Callable
 
 from .exceptions import GeckoTerminalParameterWarning
 
+MAX_PAGE = 10
+MAX_ADDRESSES = 30
+INCLUDE_LIST = ["base_token", "quote_token", "dex", "network"]
+
 
 def validate_page(f: Callable):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if "page" in kwargs and kwargs["page"] > 10:
+        print(kwargs)
+        if "page" in kwargs and kwargs["page"] > MAX_PAGE:
             warnings.warn(
-                f"Maximum 10 pages allowed, {kwargs['page']} provided",
+                f"Maximum {MAX_PAGE} pages allowed, {kwargs['page']} provided",
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
@@ -22,9 +27,12 @@ def validate_page(f: Callable):
 def validate_addresses(f: Callable):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if "addresses" in kwargs and len(kwargs["addresses"]) > 30:
+        if (
+            "addresses" in kwargs
+            and (n_addr := len(kwargs["addresses"])) > MAX_ADDRESSES
+        ):
             warnings.warn(
-                f"Maximum 30 addresses allowed, {len(kwargs['addresses'])} provided",
+                f"Maximum {MAX_ADDRESSES} addresses allowed, {n_addr} provided",
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
@@ -36,11 +44,9 @@ def validate_addresses(f: Callable):
 def validate_include(f: Callable):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if "include" in kwargs and not set(kwargs["include"]).issubset(
-                ["base_token", "quote_token", "dex", "network"]
-        ):
+        if "include" in kwargs and not set(kwargs["include"]).issubset(INCLUDE_LIST):
             warnings.warn(
-                "Include list can have: ['base_token', 'quote_token', 'dex', 'network']",
+                f"Include list can have: {INCLUDE_LIST}",
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )

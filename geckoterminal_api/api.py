@@ -159,6 +159,7 @@ class GeckoTerminalAPI:
         )
 
     @validate_include
+    @validate_page
     def network_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -178,6 +179,7 @@ class GeckoTerminalAPI:
         )
 
     @validate_include
+    @validate_page
     def network_dex_pools(
         self, network: str, dex: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
