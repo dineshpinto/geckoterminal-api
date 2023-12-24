@@ -19,7 +19,6 @@ TOKEN = ["base", "quote"]
 def validate_page(func: Callable):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        print(kwargs)
         if "page" in kwargs and kwargs["page"] > MAX_PAGE:
             warnings.warn(
                 f"Maximum {MAX_PAGE} pages allowed, {kwargs['page']} provided",

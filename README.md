@@ -6,12 +6,11 @@
 
 # GeckoTerminal API
 
-## RESTful Python client for GeckoTerminal DeFi and DeX aggregator
+## RESTful (sync + async) Python client for GeckoTerminal API
 
 Wrapper around the [GeckoTerminal](https://www.geckoterminal.com) DeFi and DeX
-aggregator operating across 90+ blockchains. This is an
-unofficial wrapper and is currently in beta.
-Please report any issues you find.
+aggregator operating across 90+ blockchains. Features both synchronous and asynchronous
+APIs. The API is currently in beta and is subject to change.
 
 ## Installation
 
@@ -24,13 +23,28 @@ pip install geckoterminal-api
 See the [GeckoTerminal API docs](https://www.geckoterminal.com/dex-api) for more
 details.
 
-## Usage and Examples
+## Usage
+
+### Synchronous API
 
 ```python
 from geckoterminal_api import GeckoTerminalAPI
 
 gt = GeckoTerminalAPI()
+gt.networks()
 ```
+
+### Asynchronous API
+
+```python
+import asyncio
+from geckoterminal_api import AsyncGeckoTerminalAPI
+
+agt = AsyncGeckoTerminalAPI()
+asyncio.run(agt.networks())
+```
+
+## Examples
 
 ### Get pools trending on a network
 
@@ -122,6 +136,16 @@ gt = GeckoTerminalAPI()
 ```
 
 and many more...
+
+## Asynchronous API
+
+```python
+import asyncio
+from geckoterminal_api import AsyncGeckoTerminalAPI
+
+gt = AsyncGeckoTerminalAPI()
+asyncio.run(gt.networks())
+```
 
 ## Disclaimer
 
