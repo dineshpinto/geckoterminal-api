@@ -1,39 +1,14 @@
 import json
-import warnings
-from functools import wraps
 from typing import Optional
 
 import requests
 
-from .exceptions import GeckoTerminalAPIError, GeckoTerminalParameterWarning
-
-
-def validate_page(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        if "page" in kwargs and kwargs["page"] > 10:
-            warnings.warn(
-                f"Maximum 10 pages allowed, {kwargs['page']} provided",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        return f(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_addresses(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        if "addresses" in kwargs and len(kwargs["addresses"]) > 30:
-            warnings.warn(
-                f"Maximum 30 addresses allowed, {len(args[1])} provided",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        return f(*args, **kwargs)
-
-    return wrapper
+from .exceptions import GeckoTerminalAPIError
+from .parameter_validation import (
+    validate_addresses,
+    validate_include,
+    validate_page,
+)
 
 
 class GeckoTerminalAPI:
@@ -44,28 +19,42 @@ class GeckoTerminalAPI:
         Args:
             api_version: GeckoTerminal API version, if None latest will be used
         """
-        self.api_version = api_version
         self.base_url = "https://api.geckoterminal.com/api/v2"
+        self.accept_header = (
+            f"application/json;version={api_version}"
+            if api_version
+            else "application/json"
+        )
         self._session = requests.Session()
 
     def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
-        headers = {
-            "accept": f"application/json;version={self.api_version}"
-            if self.api_version
-            else "application/json",
-        }
+        headers = {"accept": self.accept_header}
         url = self.base_url + endpoint
         response = self._session.request(
             method="GET", url=url, params=params, headers=headers, timeout=30
         )
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise GeckoTerminalAPIError(
-                status=response.status_code,
-                err=json.loads(response.text)["errors"][0]["title"],
-            )
+        match response.status_code:
+            case 200:
+                return response.json()
+            case 404:
+                errors = ",".join(
+                    r["title"] for r in json.loads(response.text)["errors"]
+                )
+                raise GeckoTerminalAPIError(
+                    status=response.status_code,
+                    err=errors,
+                )
+            case 429:
+                raise GeckoTerminalAPIError(
+                    status=response.status_code,
+                    err=f"Rate Limited (limit = {json.loads(response.text)['limit']})",
+                )
+            case _:
+                raise GeckoTerminalAPIError(
+                    status=response.status_code,
+                    err=response.text,
+                )
 
     def networks(self, page: int = 1) -> dict:
         """Get list of supported networks
@@ -84,6 +73,7 @@ class GeckoTerminalAPI:
         """
         return self._get(endpoint=f"/networks/{network}/dexes", params={"page": page})
 
+    @validate_include
     @validate_page
     def trending_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get trending pools across all networks
@@ -100,6 +90,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
+    @validate_include
     @validate_page
     def network_trending_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
@@ -119,6 +110,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
+    @validate_include
     def network_pool_address(
         self,
         network: str,
@@ -143,6 +135,7 @@ class GeckoTerminalAPI:
         )
 
     @validate_addresses
+    @validate_include
     def network_pools_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
@@ -165,6 +158,7 @@ class GeckoTerminalAPI:
             },
         )
 
+    @validate_include
     def network_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -183,6 +177,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
+    @validate_include
     def network_dex_pools(
         self, network: str, dex: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -202,6 +197,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
+    @validate_include
     @validate_page
     def network_new_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
@@ -216,11 +212,13 @@ class GeckoTerminalAPI:
         """
         if include is None:
             include = ["base_token", "quote_token", "dex"]
+
         return self._get(
             endpoint=f"/networks/{network}/new_pools",
             params={"include": ",".join(include), "page": page},
         )
 
+    @validate_include
     @validate_page
     def new_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get new pools across all networks
@@ -237,6 +235,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
+    @validate_include
     @validate_page
     def search_network_pool(
         self,
