@@ -6,8 +6,13 @@ import requests
 from .exceptions import GeckoTerminalAPIError
 from .parameter_validation import (
     validate_addresses,
+    validate_aggregate,
+    validate_currency,
     validate_include,
+    validate_ohlcv_limit,
     validate_page,
+    validate_timeframe,
+    validate_token,
 )
 
 
@@ -280,4 +285,159 @@ class GeckoTerminalAPI:
         """
         return self._get(
             endpoint=f"/simple/networks/{network}/token_price/{','.join(addresses)}",
+        )
+
+    @validate_include
+    @validate_page
+    def network_token_pools(
+        self,
+        network: str,
+        token_address: str,
+        include: Optional[list] = None,
+        page: int = 1,
+    ) -> dict:
+        """Get top pools for a token on a network
+
+        Args:
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
+            token_address: Address of token e.g. 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
+            include: List of related resources to include in response. Available
+                resources are: base_token, quote_token, dex (default all)
+            page: Page through results (default 1)
+        """
+        if include is None:
+            include = ["base_token", "quote_token", "dex"]
+        return self._get(
+            endpoint=f"/networks/{network}/tokens/{token_address}/pools",
+            params={"include": ",".join(include), "page": page},
+        )
+
+    @validate_include
+    def network_token(
+        self, network: str, address: str, include: Optional[list] = None
+    ) -> dict:
+        """Get specific token on a network
+
+        Args:
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
+            address: Address of token e.g. 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
+            include: List of related resources to include in response. Available
+                resources are: top_pools (default top_pools)
+        """
+        if include is None:
+            include = ["top_pools"]
+        return self._get(
+            endpoint=f"/networks/{network}/tokens/{address}",
+            params={"include": ",".join(include)},
+        )
+
+    @validate_addresses
+    @validate_include
+    def network_tokens_multi_address(
+        self, network: str, addresses: list[str], include: Optional[list] = None
+    ) -> dict:
+        """Get multiple tokens on a network
+
+        Args:
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
+            addresses: List of token addresses
+                e.g. ["0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"]
+            include: List of related resources to include in response. Available
+                resources are: top_pools (default top_pools)
+        """
+        if include is None:
+            include = ["top_pools"]
+        return self._get(
+            endpoint=f"/networks/{network}/tokens/multi/{','.join(addresses)}",
+            params={"include": ",".join(include)},
+        )
+
+    def network_tokens_address_info(self, network: str, address: str) -> dict:
+        """Get token address info on a network
+
+        Args:
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
+            address: Address of token e.g. 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+        """
+        return self._get(
+            endpoint=f"/networks/{network}/tokens/{address}/info",
+        )
+
+    def token_info_recently_updated(self, include: Optional[list] = None):
+        """Get most recently updated 100 tokens info from all networks
+
+        Args:
+            include: List of related resources to include in response. Available
+                resources are: network (default network)
+        """
+        if include is None:
+            include = ["network"]
+        return self._get(
+            endpoint="/tokens/info_recently_updated",
+            params={"include": ",".join(include)},
+        )
+
+    @validate_timeframe
+    @validate_aggregate
+    @validate_ohlcv_limit
+    @validate_currency
+    @validate_token
+    def network_pool_ohlcv(
+        self,
+        network: str,
+        pool_address: str,
+        timeframe: str,
+        aggregate: Optional[int] = None,
+        before_timestamp: Optional[int] = None,
+        limit: Optional[int] = None,
+        currency: Optional[str] = None,
+        token: Optional[str] = None,
+    ) -> dict:
+        """Get OHLCV data of a pool
+
+        Args:
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
+            pool_address: Address of pool
+                e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
+            timeframe: Timeframe of OHLCV data e.g. day, hour, minute
+            aggregate: Aggregate of OHLCV data e.g. day (1), hour ([1, 4, 12])
+                and minute ([1, 5, 15]) (default 1)
+            before_timestamp: Timestamp to get OHLCV data before e.g. 1679414400
+            limit: Limit of OHLCV data (default 100, max 1000)
+            currency: Currency of OHLCV data e.g. usd, token (default usd)
+            token: Token of OHLCV data e.g. base, quote (default base)
+        """
+        params = {
+            "aggregate": aggregate,
+            "before_timestamp": before_timestamp,
+            "limit": limit,
+            "currency": currency,
+            "token": token,
+        }
+        return self._get(
+            endpoint=f"/networks/{network}/pools/{pool_address}/ohlcv/{timeframe}",
+            params=params,
+        )
+
+    def network_pool_trades(
+        self,
+        network: str,
+        pool_address: str,
+        trade_volume_in_usd_greater_than: Optional[int] = None,
+    ) -> dict:
+        """Get trades of a pool
+
+        Args:
+            network: Network id from `networks()` e.g. eth, solana, arbitrum
+            pool_address: Address of pool
+                e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
+            trade_volume_in_usd_greater_than: Trade volume in USD greater than
+                e.g. 100000 (default 0)
+        """
+        return self._get(
+            endpoint=f"/networks/{network}/pools/{pool_address}/trades",
+            params={
+                "trade_volume_in_usd_greater_than": trade_volume_in_usd_greater_than,
+            },
         )
