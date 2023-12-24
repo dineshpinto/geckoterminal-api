@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "geckoterminal-api"
-version = "0.5.0"
+version = "0.5.1"
 repository = "https://github.com/dineshpinto/geckoterminal-api"
 homepage = "https://github.com/dineshpinto/geckoterminal-api"
 license = "MIT"
@@ -17,9 +17,7 @@ requests = "^2.31.0"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.9"
 ruff-lsp = "^0.0.48"
-jupyterlab = "^4.0.9"
-matplotlib = "^3.8.2"
-seaborn = "^0.13.0"
+ipython = "^8.19.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
