@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from typing import Optional
 
 import requests
@@ -33,8 +34,7 @@ class GeckoTerminalAPI:
         self._session = requests.Session()
 
     def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
-        response = self._session.request(
-            method="GET",
+        response = self._session.get(
             url=self.base_url + endpoint,
             params=params,
             headers={"accept": self.accept_header},
@@ -405,14 +405,17 @@ class GeckoTerminalAPI:
             timeframe: Timeframe of OHLCV data e.g. day, hour, minute
             aggregate: Aggregate of OHLCV data e.g. day (1), hour ([1, 4, 12])
                 and minute ([1, 5, 15]) (default 1)
-            before_timestamp: Timestamp to get OHLCV data before e.g. 1679414400
+            before_timestamp: Timestamp to get OHLCV data before (seconds since epoch)
+                e.g. 1679414400
             limit: Limit of OHLCV data (default 100, max 1000)
             currency: Currency of OHLCV data e.g. usd, token (default usd)
             token: Token of OHLCV data e.g. base, quote (default base)
         """
         params = {
             "aggregate": aggregate,
-            "before_timestamp": before_timestamp,
+            "before_timestamp": before_timestamp
+            if before_timestamp
+            else int(datetime.now().timestamp()),
             "limit": limit,
             "currency": currency,
             "token": token,
@@ -426,7 +429,7 @@ class GeckoTerminalAPI:
         self,
         network: str,
         pool_address: str,
-        trade_volume_in_usd_greater_than: Optional[int] = None,
+        trade_volume_in_usd_greater_than: Optional[int] = 0,
     ) -> dict:
         """Get trades of a pool
 
