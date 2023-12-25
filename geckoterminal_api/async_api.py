@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from typing import Optional
 
 import aiohttp
@@ -28,6 +29,7 @@ class AsyncGeckoTerminalAPI:
 
     async def close(self) -> None:
         await self._session.close()
+        self._session = None
 
     async def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
         if self._session is None:
@@ -51,9 +53,10 @@ class AsyncGeckoTerminalAPI:
                         err=errors,
                     )
                 case 429:
+                    rate_limit = json.loads(await response.text())["limit"]
                     raise GeckoTerminalAPIError(
                         status=response.status,
-                        err=f"Rate Limited (limit = {json.loads(await response.text())['limit']})",
+                        err=f"Rate Limited (limit = {rate_limit})",
                     )
                 case _:
                     raise GeckoTerminalAPIError(
@@ -408,14 +411,17 @@ class AsyncGeckoTerminalAPI:
             timeframe: Timeframe of OHLCV data e.g. day, hour, minute
             aggregate: Aggregate of OHLCV data e.g. day (1), hour ([1, 4, 12])
                 and minute ([1, 5, 15]) (default 1)
-            before_timestamp: Timestamp to get OHLCV data before e.g. 1679414400
+            before_timestamp: Timestamp to get OHLCV data before (seconds since epoch)
+                e.g. 1679414400
             limit: Limit of OHLCV data (default 100, max 1000)
             currency: Currency of OHLCV data e.g. usd, token (default usd)
             token: Token of OHLCV data e.g. base, quote (default base)
         """
         params = {
             "aggregate": aggregate,
-            "before_timestamp": before_timestamp,
+            "before_timestamp": before_timestamp
+            if before_timestamp
+            else int(datetime.now().timestamp()),
             "limit": limit,
             "currency": currency,
             "token": token,
@@ -429,7 +435,7 @@ class AsyncGeckoTerminalAPI:
         self,
         network: str,
         pool_address: str,
-        trade_volume_in_usd_greater_than: Optional[int] = None,
+        trade_volume_in_usd_greater_than: Optional[int] = 0,
     ) -> dict:
         """Get trades of a pool
 
