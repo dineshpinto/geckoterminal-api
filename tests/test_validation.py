@@ -28,7 +28,7 @@ from geckoterminal_api.validation import (
 @validate_currency
 @validate_token
 def func(**_kwargs):
-    """Dummy function for testing parameter validation"""
+    """Dummy function for testing parameter validation with decorators"""
 
 
 def test_page_validation():

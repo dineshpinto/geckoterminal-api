@@ -7,11 +7,11 @@ from geckoterminal_api import (
 
 
 @pytest.fixture(scope="module")
-def api():
+def client():
     return GeckoTerminalAPI()
 
 
-def test_api_exception(api):
+def test_api_exception(client):
     # raises 404
     with pytest.raises(GeckoTerminalAPIError):
-        api.network_new_pools(network="arb")
+        client.network_new_pools(network="arb")
