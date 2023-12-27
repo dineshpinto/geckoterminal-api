@@ -9,8 +9,11 @@
 ## RESTful (sync + async) Python client for GeckoTerminal API
 
 Wrapper around the [GeckoTerminal](https://www.geckoterminal.com) DeFi and DeX
-aggregator operating across 90+ blockchains. Features both synchronous and asynchronous
-APIs. The API is currently in beta and is subject to change.
+aggregator operating across 90+ blockchains.
+Features both synchronous and asynchronous APIs.
+
+The API is currently in beta and is subject to change, please report any issues you
+find.
 
 ## Installation
 
@@ -31,6 +34,7 @@ details.
 from geckoterminal_api import GeckoTerminalAPI
 
 gt = GeckoTerminalAPI()
+# Get a list of supported networks and their IDs
 gt.networks()
 ```
 
@@ -41,14 +45,41 @@ import asyncio
 from geckoterminal_api import AsyncGeckoTerminalAPI
 
 agt = AsyncGeckoTerminalAPI()
+# Get a list of supported networks and their IDs
 asyncio.run(agt.networks())
 ```
 
 ## Examples
 
+### Get trades for a specific pool
+
+```ipython
+# Query $ANALOS pool on Solana
+>>> trades = gt.network_pool_trades(network="solana", pool="69grLw4PcSypZnn3xpsozCJFT8vs8WA5817VUVnzNGTh")
+>>> for trade_data in trades["data"]:
+>>>     trade = trade_data["attributes"]
+>>>     print(f'{trade["block_timestamp"]} -- {trade["kind"]}: {float(trade["volume_in_usd"]):.2f} USD')
+```
+
+(truncated output)
+
+```text
+2023-12-27T08:27:24Z -- buy: 0.06 USD
+2023-12-27T08:27:22Z -- buy: 54.73 USD
+2023-12-27T08:27:22Z -- sell: 43.11 USD
+2023-12-27T08:27:22Z -- sell: 105.08 USD
+2023-12-27T08:27:20Z -- sell: 552.80 USD
+2023-12-27T08:27:17Z -- buy: 1116.88 USD
+2023-12-27T08:27:14Z -- sell: 1110.02 USD
+2023-12-27T08:27:12Z -- buy: 52.44 USD
+2023-12-27T08:27:02Z -- buy: 41.72 USD
+2023-12-27T08:26:59Z -- sell: 15.31 USD
+```
+
 ### Get pools trending on a network
 
 ```ipython
+# Query trending pools on Solana
 >>> gt.network_trending_pools(network="solana")
 ```
 
@@ -93,6 +124,7 @@ asyncio.run(agt.networks())
 ### Get new pools on a network
 
 ```ipython
+# Query new pools on Arbitrum
 >>> gt.network_new_pools(network="arbitrum")
 ```
 
@@ -136,16 +168,6 @@ asyncio.run(agt.networks())
 ```
 
 and many more...
-
-## Asynchronous API
-
-```python
-import asyncio
-from geckoterminal_api import AsyncGeckoTerminalAPI
-
-gt = AsyncGeckoTerminalAPI()
-asyncio.run(gt.networks())
-```
 
 ## Disclaimer
 
