@@ -31,7 +31,17 @@ jobs:
         run: poetry install --with test
       - name: Test API
         run: |
-          poetry run pytest --cov-report xml --cov=geckoterminal_api -v
+          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_api.py -v
+      - name: Test Exceptions and Validation
+        run: |
+          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_exceptions.py --cov-append -v
+          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_validation.py --cov-append -v
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+        shell: bash
+      - name: Test Async API
+        run: |
+          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_async_api.py --cov-append -v
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
