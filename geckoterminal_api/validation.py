@@ -4,89 +4,178 @@ from typing import Callable
 
 from .exceptions import GeckoTerminalParameterWarning
 
-MAX_PAGE = 10
-MAX_ADDRESSES = 30
-INCLUDE_LIST = ["base_token", "quote_token", "dex", "network", "top_pools"]
-TIMEFRAMES = ["day", "hour", "minute"]
-DAY_AGGREGATE = [1]
-HOUR_AGGREGATE = [1, 4, 12]
-MINUTE_AGGREGATE = [1, 5, 15]
-OHLCV_LIMIT = 1000
-CURRENCY = ["usd", "token"]
-TOKEN = ["base", "quote"]
 
+def validate_page(max_page: int):
+    """Validate page parameter sent to API"""
 
-def validate_params(func: Callable):
-    """Validate parameters sent to API
-
-    Note: This is "soft" validation, and is fragile as it hardcodes the
-    parameter names. It should (generally) not be relied upon.
-    """
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if "page" in kwargs and kwargs["page"] > MAX_PAGE:
-            warnings.warn(
-                f"Maximum {MAX_PAGE} pages allowed, {kwargs['page']} provided",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        if (
-            "addresses" in kwargs
-            and (n_addr := len(kwargs["addresses"])) > MAX_ADDRESSES
-        ):
-            warnings.warn(
-                f"Maximum {MAX_ADDRESSES} addresses allowed, {n_addr} provided",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        if "include" in kwargs and not set(kwargs["include"]).issubset(INCLUDE_LIST):
-            warnings.warn(
-                f"Include list can have: {INCLUDE_LIST}",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        if "timeframe" in kwargs and kwargs["timeframe"] not in TIMEFRAMES:
-            warnings.warn(
-                f"Timeframe can be: {TIMEFRAMES}",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        if "aggregate" in kwargs and "timeframe" in kwargs:
-            match kwargs["timeframe"]:
-                case "day":
-                    valid_agg = DAY_AGGREGATE
-                case "hour":
-                    valid_agg = HOUR_AGGREGATE
-                case "minute":
-                    valid_agg = MINUTE_AGGREGATE
-                case _:
-                    valid_agg = []
-
-            if kwargs["aggregate"] not in valid_agg:
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "page" in kwargs and kwargs["page"] > max_page:
                 warnings.warn(
-                    f"Aggregate can be {valid_agg} when timeframe is {kwargs['timeframe']}",
+                    f"Maximum {max_page} pages allowed, {kwargs['page']} provided",
                     GeckoTerminalParameterWarning,
                     stacklevel=2,
                 )
-        if "ohlcv_limit" in kwargs and kwargs["ohlcv_limit"] > OHLCV_LIMIT:
-            warnings.warn(
-                f"Maximum {OHLCV_LIMIT} OHLCV allowed, {kwargs['ohlcv_limit']} provided",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        if "currency" in kwargs and kwargs["currency"] not in CURRENCY:
-            warnings.warn(
-                f"Currency can be: {CURRENCY}",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        if "token" in kwargs and kwargs["token"] not in TOKEN:
-            warnings.warn(
-                f"Token can be: {TOKEN}",
-                GeckoTerminalParameterWarning,
-                stacklevel=2,
-            )
-        return func(*args, **kwargs)
+            return func(*args, **kwargs)
 
-    return wrapper
+        return wrapper
+
+    return decorator
+
+
+def validate_include(include_list: list):
+    """Validate include parameter sent to API"""
+
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "include" in kwargs and not set(kwargs["include"]).issubset(
+                include_list
+            ):
+                warnings.warn(
+                    f"Include list can have: {include_list}",
+                    GeckoTerminalParameterWarning,
+                    stacklevel=2,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def validate_addresses(max_addresses: int):
+    """Validate addresses parameter sent to API"""
+
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if (
+                "addresses" in kwargs
+                and (n_addr := len(kwargs["addresses"])) > max_addresses
+            ):
+                warnings.warn(
+                    f"Maximum {max_addresses} addresses allowed, {n_addr} provided",
+                    GeckoTerminalParameterWarning,
+                    stacklevel=2,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def validate_timeframe(timeframes: list):
+    """Validate timeframe parameter sent to API"""
+
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "timeframe" in kwargs and kwargs["timeframe"] not in timeframes:
+                warnings.warn(
+                    f"Timeframe can have: {timeframes}",
+                    GeckoTerminalParameterWarning,
+                    stacklevel=2,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def validate_aggregate(
+    minute_aggregate: list,
+    hour_aggregate: list,
+    day_aggregate: list,
+):
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "timeframe" in kwargs:
+                if (
+                    kwargs["timeframe"] == "minute"
+                    and kwargs["aggregate"] not in minute_aggregate
+                ):
+                    warnings.warn(
+                        f"Minute aggregate can have: {minute_aggregate}",
+                        GeckoTerminalParameterWarning,
+                        stacklevel=2,
+                    )
+                elif (
+                    kwargs["timeframe"] == "hour"
+                    and kwargs["aggregate"] not in hour_aggregate
+                ):
+                    warnings.warn(
+                        f"Hour aggregate can have: {hour_aggregate}",
+                        GeckoTerminalParameterWarning,
+                        stacklevel=2,
+                    )
+                elif (
+                    kwargs["timeframe"] == "day"
+                    and kwargs["aggregate"] not in day_aggregate
+                ):
+                    warnings.warn(
+                        f"Day aggregate can have: {day_aggregate}",
+                        GeckoTerminalParameterWarning,
+                        stacklevel=2,
+                    )
+
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def validate_limit(ohlcv_limit: int):
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "limit" in kwargs and kwargs["limit"] > ohlcv_limit:
+                warnings.warn(
+                    f"Maximum {ohlcv_limit} limit allowed, {kwargs['limit']} provided",
+                    GeckoTerminalParameterWarning,
+                    stacklevel=2,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def validate_currency(currencies: list):
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "currency" in kwargs and kwargs["currency"] not in currencies:
+                warnings.warn(
+                    f"Currency can have: {currencies}",
+                    GeckoTerminalParameterWarning,
+                    stacklevel=2,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def validate_token(tokens: list):
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "token" in kwargs and kwargs["token"] not in tokens:
+                warnings.warn(
+                    f"Token can have: {tokens}",
+                    GeckoTerminalParameterWarning,
+                    stacklevel=2,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator

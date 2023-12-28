@@ -1,6 +1,6 @@
 import pytest
 
-from geckoterminal_api import GeckoTerminalAPI
+from geckoterminal_api.api import GeckoTerminalAPI
 
 
 @pytest.fixture(scope="module")

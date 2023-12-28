@@ -1,9 +1,7 @@
 import pytest
 
-from geckoterminal_api import (
-    GeckoTerminalAPI,
-    GeckoTerminalAPIError,
-)
+from geckoterminal_api.api import GeckoTerminalAPI
+from geckoterminal_api.exceptions import GeckoTerminalAPIError
 
 
 @pytest.fixture(scope="module")
