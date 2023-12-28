@@ -27,7 +27,7 @@ from geckoterminal_api.validation import (
 )
 
 
-@validate_page(0, MAX_PAGE)
+@validate_page(MAX_PAGE)
 @validate_addresses(MAX_ADDRESSES)
 @validate_include(POOL_INCLUDES)
 @validate_timeframe(TIMEFRAMES)
