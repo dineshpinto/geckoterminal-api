@@ -91,6 +91,8 @@ def validate_aggregate(
     hour_aggregate: list,
     day_aggregate: list,
 ):
+    """Validate aggregate parameter sent to API"""
+
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -131,6 +133,8 @@ def validate_aggregate(
 
 
 def validate_limit(ohlcv_limit: int):
+    """Validate OHLCV limit parameter sent to API"""
+
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -148,6 +152,8 @@ def validate_limit(ohlcv_limit: int):
 
 
 def validate_currency(currencies: list):
+    """Validate currency parameter sent to API"""
+
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -165,6 +171,8 @@ def validate_currency(currencies: list):
 
 
 def validate_token(tokens: list):
+    """Validate token parameter sent to API"""
+
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
