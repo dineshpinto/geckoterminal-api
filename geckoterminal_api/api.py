@@ -5,16 +5,7 @@ from typing import Optional
 import requests
 
 from .exceptions import GeckoTerminalAPIError
-from .validation import (
-    validate_addresses,
-    validate_aggregate,
-    validate_currency,
-    validate_include,
-    validate_ohlcv_limit,
-    validate_page,
-    validate_timeframe,
-    validate_token,
-)
+from .validation import validate_params
 
 
 class GeckoTerminalAPI:
@@ -80,8 +71,7 @@ class GeckoTerminalAPI:
         """
         return self._get(endpoint=f"/networks/{network}/dexes", params={"page": page})
 
-    @validate_include
-    @validate_page
+    @validate_params
     def trending_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get trending pools across all networks
 
@@ -97,8 +87,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     def network_trending_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -117,7 +106,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
+    @validate_params
     def network_pool_address(
         self,
         network: str,
@@ -141,8 +130,7 @@ class GeckoTerminalAPI:
             },
         )
 
-    @validate_addresses
-    @validate_include
+    @validate_params
     def network_pools_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
@@ -165,8 +153,7 @@ class GeckoTerminalAPI:
             },
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     def network_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -185,8 +172,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     def network_dex_pools(
         self, network: str, dex: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -206,8 +192,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     def network_new_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -227,8 +212,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     def new_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get new pools across all networks
 
@@ -244,8 +228,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     def search_network_pool(
         self,
         query: str,
@@ -275,7 +258,7 @@ class GeckoTerminalAPI:
             },
         )
 
-    @validate_addresses
+    @validate_params
     def network_addresses_token_price(self, network: str, addresses: list[str]) -> dict:
         """Get current USD prices of multiple tokens on a network
 
@@ -289,8 +272,7 @@ class GeckoTerminalAPI:
             endpoint=f"/simple/networks/{network}/token_price/{','.join(addresses)}",
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     def network_token_pools(
         self,
         network: str,
@@ -314,7 +296,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
+    @validate_params
     def network_token(
         self, network: str, address: str, include: Optional[list] = None
     ) -> dict:
@@ -333,8 +315,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include)},
         )
 
-    @validate_addresses
-    @validate_include
+    @validate_params
     def network_tokens_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
@@ -380,11 +361,7 @@ class GeckoTerminalAPI:
             params={"include": ",".join(include)},
         )
 
-    @validate_timeframe
-    @validate_aggregate
-    @validate_ohlcv_limit
-    @validate_currency
-    @validate_token
+    @validate_params
     def network_pool_ohlcv(
         self,
         network: str,

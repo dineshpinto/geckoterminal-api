@@ -8,25 +8,11 @@ from geckoterminal_api.validation import (
     MAX_ADDRESSES,
     MAX_PAGE,
     OHLCV_LIMIT,
-    validate_addresses,
-    validate_aggregate,
-    validate_currency,
-    validate_include,
-    validate_ohlcv_limit,
-    validate_page,
-    validate_timeframe,
-    validate_token,
+    validate_params,
 )
 
 
-@validate_page
-@validate_addresses
-@validate_include
-@validate_timeframe
-@validate_aggregate
-@validate_ohlcv_limit
-@validate_currency
-@validate_token
+@validate_params
 def func(**_kwargs):
     """Dummy function for testing parameter validation with decorators"""
 

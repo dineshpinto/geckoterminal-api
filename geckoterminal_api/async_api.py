@@ -5,16 +5,7 @@ from typing import Optional
 import aiohttp
 
 from .exceptions import GeckoTerminalAPIError
-from .validation import (
-    validate_addresses,
-    validate_aggregate,
-    validate_currency,
-    validate_include,
-    validate_ohlcv_limit,
-    validate_page,
-    validate_timeframe,
-    validate_token,
-)
+from .validation import validate_params
 
 
 class AsyncGeckoTerminalAPI:
@@ -82,8 +73,7 @@ class AsyncGeckoTerminalAPI:
             endpoint=f"/networks/{network}/dexes", params={"page": page}
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def trending_pools(
         self, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -101,8 +91,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def network_trending_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -121,7 +110,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
+    @validate_params
     async def network_pool_address(
         self,
         network: str,
@@ -145,8 +134,7 @@ class AsyncGeckoTerminalAPI:
             },
         )
 
-    @validate_addresses
-    @validate_include
+    @validate_params
     async def network_pools_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
@@ -169,8 +157,7 @@ class AsyncGeckoTerminalAPI:
             },
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def network_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -189,8 +176,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def network_dex_pools(
         self, network: str, dex: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -210,8 +196,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def network_new_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
@@ -231,8 +216,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def new_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get new pools across all networks
 
@@ -248,8 +232,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def search_network_pool(
         self,
         query: str,
@@ -279,7 +262,7 @@ class AsyncGeckoTerminalAPI:
             },
         )
 
-    @validate_addresses
+    @validate_params
     async def network_addresses_token_price(
         self, network: str, addresses: list[str]
     ) -> dict:
@@ -295,8 +278,7 @@ class AsyncGeckoTerminalAPI:
             endpoint=f"/simple/networks/{network}/token_price/{','.join(addresses)}",
         )
 
-    @validate_include
-    @validate_page
+    @validate_params
     async def network_token_pools(
         self,
         network: str,
@@ -320,7 +302,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include
+    @validate_params
     async def network_token(
         self, network: str, address: str, include: Optional[list] = None
     ) -> dict:
@@ -339,8 +321,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include)},
         )
 
-    @validate_addresses
-    @validate_include
+    @validate_params
     async def network_tokens_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
@@ -372,6 +353,7 @@ class AsyncGeckoTerminalAPI:
             endpoint=f"/networks/{network}/tokens/{address}/info",
         )
 
+    @validate_params
     async def token_info_recently_updated(self, include: Optional[list] = None) -> dict:
         """Get most recently updated 100 tokens info from all networks
 
@@ -386,11 +368,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include)},
         )
 
-    @validate_timeframe
-    @validate_aggregate
-    @validate_ohlcv_limit
-    @validate_currency
-    @validate_token
+    @validate_params
     async def network_pool_ohlcv(
         self,
         network: str,

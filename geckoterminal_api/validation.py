@@ -16,7 +16,13 @@ CURRENCY = ["usd", "token"]
 TOKEN = ["base", "quote"]
 
 
-def validate_page(func: Callable):
+def validate_params(func: Callable):
+    """Validate parameters sent to API
+
+    Note: This is "soft" validation, and is fragile as it hardcodes the
+    parameter names. It should (generally) not be relied upon.
+    """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         if "page" in kwargs and kwargs["page"] > MAX_PAGE:
@@ -25,14 +31,6 @@ def validate_page(func: Callable):
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_addresses(func: Callable):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
         if (
             "addresses" in kwargs
             and (n_addr := len(kwargs["addresses"])) > MAX_ADDRESSES
@@ -42,42 +40,18 @@ def validate_addresses(func: Callable):
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_include(func: Callable):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
         if "include" in kwargs and not set(kwargs["include"]).issubset(INCLUDE_LIST):
             warnings.warn(
                 f"Include list can have: {INCLUDE_LIST}",
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_timeframe(func: Callable):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
         if "timeframe" in kwargs and kwargs["timeframe"] not in TIMEFRAMES:
             warnings.warn(
                 f"Timeframe can be: {TIMEFRAMES}",
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_aggregate(func: Callable):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
         if "aggregate" in kwargs and "timeframe" in kwargs:
             match kwargs["timeframe"]:
                 case "day":
@@ -95,43 +69,18 @@ def validate_aggregate(func: Callable):
                     GeckoTerminalParameterWarning,
                     stacklevel=2,
                 )
-
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_ohlcv_limit(func: Callable):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
         if "ohlcv_limit" in kwargs and kwargs["ohlcv_limit"] > OHLCV_LIMIT:
             warnings.warn(
                 f"Maximum {OHLCV_LIMIT} OHLCV allowed, {kwargs['ohlcv_limit']} provided",
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_currency(func: Callable):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
         if "currency" in kwargs and kwargs["currency"] not in CURRENCY:
             warnings.warn(
                 f"Currency can be: {CURRENCY}",
                 GeckoTerminalParameterWarning,
                 stacklevel=2,
             )
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def validate_token(func: Callable):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
         if "token" in kwargs and kwargs["token"] not in TOKEN:
             warnings.warn(
                 f"Token can be: {TOKEN}",
