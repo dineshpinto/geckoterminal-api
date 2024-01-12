@@ -15,10 +15,16 @@ python = "^3.10"
 requests = "^2.31.0"
 aiohttp = "^3.9.1"
 
+[tool.poetry.group.dev]
+optional = true
+
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.9"
 ruff-lsp = "^0.0.48"
 ipython = "^8.19.0"
+
+[tool.poetry.group.test]
+optional = true
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
