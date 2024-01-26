@@ -49,6 +49,21 @@ class GeckoTerminalAPI:
         self._session = requests.Session()
 
     def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
+        """
+        Private method to send a GET request to the specified endpoint.
+
+        Args:
+            endpoint (str): The API endpoint to send the request to.
+            params (Optional[dict], optional): A dictionary of query parameters to
+                include in the request. Defaults to None.
+
+        Returns:
+            dict: The JSON response from the API as a dictionary.
+
+        Raises:
+            GeckoTerminalAPIError: If the API response status code is not 200, it raises
+                an exception with the status code and error message.
+        """
         response = self._session.get(
             url=self.base_url + endpoint,
             params=params,

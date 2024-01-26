@@ -33,6 +33,8 @@ from .validation import (
 
 
 class AsyncGeckoTerminalAPI:
+    """Asynchronous RESTful Python client for GeckoTerminal API."""
+
     def __init__(self, api_version: Optional[str] = None):
         self.base_url = "https://api.geckoterminal.com/api/v2"
         self.accept_header = (
@@ -47,6 +49,21 @@ class AsyncGeckoTerminalAPI:
         self._session = None
 
     async def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
+        """
+        Asynchronous method to send a GET request to the specified endpoint.
+
+        Args:
+            endpoint (str): The API endpoint to send the request to.
+            params (Optional[dict], optional): A dictionary of query parameters to
+                include in the request. Defaults to None.
+
+        Returns:
+            dict: The JSON response from the API as a dictionary.
+
+        Raises:
+            GeckoTerminalAPIError: If the API response status code is not 200, it raises
+                an exception with the status code and error message.
+        """
         if self._session is None:
             self._session = aiohttp.ClientSession(raise_for_status=True)
         get_params = {
