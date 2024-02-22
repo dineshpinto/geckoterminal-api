@@ -28,7 +28,9 @@ jobs:
       - name: Set up poetry
         uses: Gr1N/setup-poetry@v8
       - name: Install dependencies
-        run: poetry install --with test
+        run: poetry install --with dev
+      - name: Lint with ruff
+        run: poetry run ruff check
       - name: Test API
         run: |
           poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_api.py -v

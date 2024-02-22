@@ -21,12 +21,6 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.9"
 ruff-lsp = "^0.0.48"
-ipython = "^8.19.0"
-
-[tool.poetry.group.test]
-optional = true
-
-[tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 pytest-cov = "^4.1.0"
 pytest-asyncio = "^0.23.2"
@@ -37,11 +31,18 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 extend-select = [
+    "E", # pycodestyle-error
+    "W", # pycodestyle-warning
+    "F", # pyflakes
+    "N", # pep8-naming
     "B", # flake8-bugbear
+    "I", # isort
+    "ASYNC", # flake8-async
+    "BLE", # flake8-blind-except
+    "FBT", # flake8-boolean-trap
+    "A", # flake8-builtins
     "C4", # flake8-comprehensions
     "ERA", # flake8-eradicate/eradicate
-    "I", # isort
-    "N", # pep8-naming
     "PIE", # flake8-pie
     "PGH", # pygrep
     "RUF", # ruff checks
