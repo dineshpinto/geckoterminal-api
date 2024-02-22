@@ -1,6 +1,6 @@
 import warnings
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable
 
 from .exceptions import GeckoTerminalParameterWarning
 

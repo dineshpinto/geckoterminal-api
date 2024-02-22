@@ -1,6 +1,5 @@
 import json
 from datetime import datetime
-from typing import Optional
 
 import aiohttp
 
@@ -26,7 +25,7 @@ from .validation import validate
 class AsyncGeckoTerminalAPI:
     """Asynchronous RESTful Python client for GeckoTerminal API."""
 
-    def __init__(self, api_version: Optional[str] = None):
+    def __init__(self, api_version: str | None = None):
         self.base_url = "https://api.geckoterminal.com/api/v2"
         self.accept_header = (
             f"application/json;version={api_version}"
@@ -39,7 +38,7 @@ class AsyncGeckoTerminalAPI:
         await self._session.close()
         self._session = None
 
-    async def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
+    async def _get(self, endpoint: str, params: dict | None = None) -> dict:
         """Asynchronous method to send a GET request to the specified endpoint.
 
         Args:
@@ -110,9 +109,7 @@ class AsyncGeckoTerminalAPI:
         )
 
     @validate(max_page=MAX_PAGE, include_list=POOL_INCLUDES)
-    async def trending_pools(
-        self, include: Optional[list] = None, page: int = 1
-    ) -> dict:
+    async def trending_pools(self, include: list | None = None, page: int = 1) -> dict:
         """Get trending pools across all networks
 
         Args:
@@ -130,7 +127,7 @@ class AsyncGeckoTerminalAPI:
 
     @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_trending_pools(
-        self, network: str, include: Optional[list] = None, page: int = 1
+        self, network: str, include: list | None = None, page: int = 1
     ) -> dict:
         """Get trending pools on a network
 
@@ -153,7 +150,7 @@ class AsyncGeckoTerminalAPI:
         self,
         network: str,
         address: str,
-        include: Optional[list] = None,
+        include: list | None = None,
     ) -> dict:
         """Get specific pool on a network
 
@@ -175,7 +172,7 @@ class AsyncGeckoTerminalAPI:
 
     @validate(max_addresses=MAX_ADDRESSES, include_list=NETWORK_POOL_INCLUDES)
     async def network_pools_multi_address(
-        self, network: str, addresses: list[str], include: Optional[list] = None
+        self, network: str, addresses: list[str], include: list | None = None
     ) -> dict:
         """Get multiple pools on a network
 
@@ -199,7 +196,7 @@ class AsyncGeckoTerminalAPI:
 
     @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_pools(
-        self, network: str, include: Optional[list] = None, page: int = 1
+        self, network: str, include: list | None = None, page: int = 1
     ) -> dict:
         """Get top pools on a network
 
@@ -219,7 +216,7 @@ class AsyncGeckoTerminalAPI:
 
     @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_dex_pools(
-        self, network: str, dex: str, include: Optional[list] = None, page: int = 1
+        self, network: str, dex: str, include: list | None = None, page: int = 1
     ) -> dict:
         """Get top pools on a network's dex
 
@@ -240,7 +237,7 @@ class AsyncGeckoTerminalAPI:
 
     @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_new_pools(
-        self, network: str, include: Optional[list] = None, page: int = 1
+        self, network: str, include: list | None = None, page: int = 1
     ) -> dict:
         """Get new pools on a network
 
@@ -260,7 +257,7 @@ class AsyncGeckoTerminalAPI:
         )
 
     @validate(max_page=MAX_PAGE, include_list=POOL_INCLUDES)
-    async def new_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
+    async def new_pools(self, include: list | None = None, page: int = 1) -> dict:
         """Get new pools across all networks
 
         Args:
@@ -280,8 +277,8 @@ class AsyncGeckoTerminalAPI:
     async def search_network_pool(
         self,
         query: str,
-        network: Optional[str] = None,
-        include: Optional[list] = None,
+        network: str | None = None,
+        include: list | None = None,
         page: int = 1,
     ) -> dict:
         """Search for a pool on a network
@@ -329,7 +326,7 @@ class AsyncGeckoTerminalAPI:
         self,
         network: str,
         token_address: str,
-        include: Optional[list] = None,
+        include: list | None = None,
         page: int = 1,
     ) -> dict:
         """Get top pools for a token on a network
@@ -352,7 +349,7 @@ class AsyncGeckoTerminalAPI:
 
     @validate(include_list=TOKEN_INCLUDES)
     async def network_token(
-        self, network: str, address: str, include: Optional[list] = None
+        self, network: str, address: str, include: list | None = None
     ) -> dict:
         """Get specific token on a network
 
@@ -372,7 +369,7 @@ class AsyncGeckoTerminalAPI:
 
     @validate(max_addresses=MAX_ADDRESSES, include_list=TOKEN_INCLUDES)
     async def network_tokens_multi_address(
-        self, network: str, addresses: list[str], include: Optional[list] = None
+        self, network: str, addresses: list[str], include: list | None = None
     ) -> dict:
         """Get multiple tokens on a network
 
@@ -405,7 +402,7 @@ class AsyncGeckoTerminalAPI:
         )
 
     @validate(max_addresses=MAX_ADDRESSES, include_list=TOKEN_INFO_INCLUDES)
-    async def token_info_recently_updated(self, include: Optional[list] = None) -> dict:
+    async def token_info_recently_updated(self, include: list | None = None) -> dict:
         """Get most recently updated 100 tokens info from all networks
 
         Args:
@@ -434,11 +431,11 @@ class AsyncGeckoTerminalAPI:
         network: str,
         pool_address: str,
         timeframe: str,
-        aggregate: Optional[int] = 1,
-        before_timestamp: Optional[int] = None,
-        limit: Optional[int] = 100,
-        currency: Optional[str] = "usd",
-        token: Optional[str] = "base",
+        aggregate: int | None = 1,
+        before_timestamp: int | None = None,
+        limit: int | None = 100,
+        currency: str | None = "usd",
+        token: str | None = "base",
     ) -> dict:
         """Get OHLCV data of a pool
 
@@ -474,7 +471,7 @@ class AsyncGeckoTerminalAPI:
         self,
         network: str,
         pool_address: str,
-        trade_volume_in_usd_greater_than: Optional[int] = 0,
+        trade_volume_in_usd_greater_than: int | None = 0,
     ) -> dict:
         """Get trades of a pool
 

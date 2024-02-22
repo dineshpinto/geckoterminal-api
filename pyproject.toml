@@ -30,6 +30,9 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
 extend-select = [
     "E", # pycodestyle-error
     "W", # pycodestyle-warning
@@ -51,3 +54,6 @@ extend-select = [
     "TID", # flake8-tidy-imports
     "UP", # pyupgrade
 ]
+
+[tool.ruff.format]
+docstring-code-format = true
