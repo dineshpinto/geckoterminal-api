@@ -15,28 +15,23 @@ from geckoterminal_api.limits import (
     TIMEFRAMES,
     TOKENS,
 )
-from geckoterminal_api.validation import (
-    validate_addresses,
-    validate_aggregate,
-    validate_currency,
-    validate_include,
-    validate_limit,
-    validate_page,
-    validate_timeframe,
-    validate_token,
+from geckoterminal_api.validation import validate
+
+
+@validate(
+    max_page=MAX_PAGE,
+    max_addresses=MAX_ADDRESSES,
+    include_list=POOL_INCLUDES,
+    timeframes=TIMEFRAMES,
+    minute_aggregates=MINUTE_AGGREGATES,
+    hour_aggregates=HOUR_AGGREGATES,
+    day_aggregates=DAY_AGGREGATES,
+    ohlcv_limit=OHLCV_LIMIT,
+    tokens=TOKENS,
+    currencies=CURRENCIES,
 )
-
-
-@validate_page(MAX_PAGE)
-@validate_addresses(MAX_ADDRESSES)
-@validate_include(POOL_INCLUDES)
-@validate_timeframe(TIMEFRAMES)
-@validate_aggregate(MINUTE_AGGREGATES, HOUR_AGGREGATES, DAY_AGGREGATES)
-@validate_limit(OHLCV_LIMIT)
-@validate_token(TOKENS)
-@validate_currency(CURRENCIES)
 def func(**_kwargs):
-    """Dummy function for testing parameter validation with decorators"""
+    """Dummy function for testing parameter validation with decorators."""
 
 
 def test_page_validation():

@@ -20,16 +20,7 @@ from .limits import (
     TOKEN_INFO_INCLUDES,
     TOKENS,
 )
-from .validation import (
-    validate_addresses,
-    validate_aggregate,
-    validate_currency,
-    validate_include,
-    validate_limit,
-    validate_page,
-    validate_timeframe,
-    validate_token,
-)
+from .validation import validate
 
 
 class AsyncGeckoTerminalAPI:
@@ -49,18 +40,20 @@ class AsyncGeckoTerminalAPI:
         self._session = None
 
     async def _get(self, endpoint: str, params: Optional[dict] = None) -> dict:
-        """
-        Asynchronous method to send a GET request to the specified endpoint.
+        """Asynchronous method to send a GET request to the specified endpoint.
 
         Args:
+        ----
             endpoint (str): The API endpoint to send the request to.
             params (Optional[dict], optional): A dictionary of query parameters to
                 include in the request. Defaults to None.
 
         Returns:
+        -------
             dict: The JSON response from the API as a dictionary.
 
         Raises:
+        ------
             GeckoTerminalAPIError: If the API response status code is not 200, it raises
                 an exception with the status code and error message.
         """
@@ -99,6 +92,7 @@ class AsyncGeckoTerminalAPI:
         """Get list of supported networks
 
         Args:
+        ----
             page: Page through results (default 1)
         """
         return await self._get(endpoint="/networks", params={"page": page})
@@ -107,6 +101,7 @@ class AsyncGeckoTerminalAPI:
         """Get list of supported dexes on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             page: Page through results (default 1)
         """
@@ -114,14 +109,14 @@ class AsyncGeckoTerminalAPI:
             endpoint=f"/networks/{network}/dexes", params={"page": page}
         )
 
-    @validate_include(POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=POOL_INCLUDES)
     async def trending_pools(
         self, include: Optional[list] = None, page: int = 1
     ) -> dict:
         """Get trending pools across all networks
 
         Args:
+        ----
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex, network (default all)
             page: Page through results (default 1)
@@ -133,14 +128,14 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include(NETWORK_POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_trending_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
         """Get trending pools on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
@@ -153,7 +148,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include(NETWORK_POOL_INCLUDES)
+    @validate(include_list=NETWORK_POOL_INCLUDES)
     async def network_pool_address(
         self,
         network: str,
@@ -163,6 +158,7 @@ class AsyncGeckoTerminalAPI:
         """Get specific pool on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             address: Address of pool e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
             include: List of related resources to include in response. Available
@@ -177,14 +173,14 @@ class AsyncGeckoTerminalAPI:
             },
         )
 
-    @validate_addresses(MAX_ADDRESSES)
-    @validate_include(NETWORK_POOL_INCLUDES)
+    @validate(max_addresses=MAX_ADDRESSES, include_list=NETWORK_POOL_INCLUDES)
     async def network_pools_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
         """Get multiple pools on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             addresses: List of pool addresses
                 e.g. ["0x60594a405d53811d3bc4766596efd80fd545a270",
@@ -201,14 +197,14 @@ class AsyncGeckoTerminalAPI:
             },
         )
 
-    @validate_include(NETWORK_POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
         """Get top pools on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
@@ -221,14 +217,14 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include(NETWORK_POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_dex_pools(
         self, network: str, dex: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
         """Get top pools on a network's dex
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             dex: Dex id from `dexes()` e.g. sushiswap, raydium, uniswap_v3
             include: List of related resources to include in response. Available
@@ -242,14 +238,14 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include(NETWORK_POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_new_pools(
         self, network: str, include: Optional[list] = None, page: int = 1
     ) -> dict:
         """Get new pools on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
@@ -263,12 +259,12 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include(POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=POOL_INCLUDES)
     async def new_pools(self, include: Optional[list] = None, page: int = 1) -> dict:
         """Get new pools across all networks
 
         Args:
+        ----
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex, network (default all)
             page: Page through results (default 1)
@@ -280,8 +276,7 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include(NETWORK_POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def search_network_pool(
         self,
         query: str,
@@ -292,6 +287,7 @@ class AsyncGeckoTerminalAPI:
         """Search for a pool on a network
 
         Args:
+        ----
             query: Search query: can be pool address, token address, or token symbol
                 e.g. "ETH"
             network: Network id from `networks()` e.g. eth, solana, arbitrum
@@ -311,13 +307,14 @@ class AsyncGeckoTerminalAPI:
             },
         )
 
-    @validate_addresses(MAX_ADDRESSES)
+    @validate(max_addresses=MAX_ADDRESSES)
     async def network_addresses_token_price(
         self, network: str, addresses: list[str]
     ) -> dict:
         """Get current USD prices of multiple tokens on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             addresses: List of token addresses
                 e.g. ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
@@ -327,8 +324,7 @@ class AsyncGeckoTerminalAPI:
             endpoint=f"/simple/networks/{network}/token_price/{','.join(addresses)}",
         )
 
-    @validate_include(NETWORK_POOL_INCLUDES)
-    @validate_page(MAX_PAGE)
+    @validate(max_page=MAX_PAGE, include_list=NETWORK_POOL_INCLUDES)
     async def network_token_pools(
         self,
         network: str,
@@ -339,8 +335,10 @@ class AsyncGeckoTerminalAPI:
         """Get top pools for a token on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
-            token_address: Address of token e.g. 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
+            token_address: Address of token
+                e.g. 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
             include: List of related resources to include in response. Available
                 resources are: base_token, quote_token, dex (default all)
             page: Page through results (default 1)
@@ -352,13 +350,14 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include), "page": page},
         )
 
-    @validate_include(TOKEN_INCLUDES)
+    @validate(include_list=TOKEN_INCLUDES)
     async def network_token(
         self, network: str, address: str, include: Optional[list] = None
     ) -> dict:
         """Get specific token on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             address: Address of token e.g. 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
             include: List of related resources to include in response. Available
@@ -371,14 +370,14 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include)},
         )
 
-    @validate_addresses(MAX_ADDRESSES)
-    @validate_include(TOKEN_INCLUDES)
+    @validate(max_addresses=MAX_ADDRESSES, include_list=TOKEN_INCLUDES)
     async def network_tokens_multi_address(
         self, network: str, addresses: list[str], include: Optional[list] = None
     ) -> dict:
         """Get multiple tokens on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             addresses: List of token addresses
                 e.g. ["0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
@@ -397,6 +396,7 @@ class AsyncGeckoTerminalAPI:
         """Get token address info on a network
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             address: Address of token e.g. 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
         """
@@ -404,11 +404,12 @@ class AsyncGeckoTerminalAPI:
             endpoint=f"/networks/{network}/tokens/{address}/info",
         )
 
-    @validate_include(TOKEN_INFO_INCLUDES)
+    @validate(max_addresses=MAX_ADDRESSES, include_list=TOKEN_INFO_INCLUDES)
     async def token_info_recently_updated(self, include: Optional[list] = None) -> dict:
         """Get most recently updated 100 tokens info from all networks
 
         Args:
+        ----
             include: List of related resources to include in response. Available
                 resources are: network (default network)
         """
@@ -419,11 +420,15 @@ class AsyncGeckoTerminalAPI:
             params={"include": ",".join(include)},
         )
 
-    @validate_timeframe(TIMEFRAMES)
-    @validate_aggregate(MINUTE_AGGREGATES, HOUR_AGGREGATES, DAY_AGGREGATES)
-    @validate_limit(OHLCV_LIMIT)
-    @validate_currency(CURRENCIES)
-    @validate_token(TOKENS)
+    @validate(
+        timeframes=TIMEFRAMES,
+        minute_aggregates=MINUTE_AGGREGATES,
+        hour_aggregates=HOUR_AGGREGATES,
+        day_aggregates=DAY_AGGREGATES,
+        ohlcv_limit=OHLCV_LIMIT,
+        currencies=CURRENCIES,
+        tokens=TOKENS,
+    )
     async def network_pool_ohlcv(
         self,
         network: str,
@@ -438,6 +443,7 @@ class AsyncGeckoTerminalAPI:
         """Get OHLCV data of a pool
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             pool_address: Address of pool
                 e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
@@ -473,6 +479,7 @@ class AsyncGeckoTerminalAPI:
         """Get trades of a pool
 
         Args:
+        ----
             network: Network id from `networks()` e.g. eth, solana, arbitrum
             pool_address: Address of pool
                 e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
