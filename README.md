@@ -175,6 +175,30 @@ asyncio.run(agt.networks())
 
 and many more...
 
+### Proxy support
+
+You can use the `proxies` parameter to pass a dictionary of proxy URLs to the
+synchronous API
+
+```python
+from geckoterminal_api import GeckoTerminalAPI
+
+proxies = {
+    'http': 'http://10.10.10.10:8000',
+    'https': 'http://10.10.10.10:8000',
+}
+gt = GeckoTerminalAPI(proxies=proxies)
+```
+
+For the asynchronous API, you can use the `proxy` parameter:
+
+```python
+from geckoterminal_api import AsyncGeckoTerminalAPI
+
+proxy = "http://proxy.com"
+gt = AsyncGeckoTerminalAPI(proxy=proxy)
+```
+
 ## Disclaimer
 
 This project is for educational purposes only. You should not construe any such

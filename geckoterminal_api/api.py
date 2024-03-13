@@ -25,10 +25,12 @@ from .validation import validate
 class GeckoTerminalAPI:
     """RESTful Python client for GeckoTerminal API."""
 
-    def __init__(self, api_version: str | None = None):
-        """Args:
+    def __init__(self, api_version: str | None = None, proxies: dict | None = None):
+        """
+        Args:
         ----
             api_version: GeckoTerminal API version, if None latest will be used
+            proxies: Proxies to use for the requests
         """
         self.base_url = "https://api.geckoterminal.com/api/v2"
         self.accept_header = (
@@ -37,6 +39,7 @@ class GeckoTerminalAPI:
             else "application/json"
         )
         self._session = requests.Session()
+        self._session.proxies = proxies
 
     def _get(self, endpoint: str, params: dict | None = None) -> dict:
         """Private method to send a GET request to the specified endpoint.

@@ -25,13 +25,20 @@ from .validation import validate
 class AsyncGeckoTerminalAPI:
     """Asynchronous RESTful Python client for GeckoTerminal API."""
 
-    def __init__(self, api_version: str | None = None):
+    def __init__(self, api_version: str | None = None, proxy: str | None = None):
+        """
+        Args:
+        ----
+            api_version: GeckoTerminal API version, if None latest will be used
+            proxy: Proxy to use for the requests
+        """
         self.base_url = "https://api.geckoterminal.com/api/v2"
         self.accept_header = (
             f"application/json;version={api_version}"
             if api_version
             else "application/json"
         )
+        self.proxy = proxy
         self._session = None
 
     async def close(self) -> None:
@@ -62,6 +69,7 @@ class AsyncGeckoTerminalAPI:
             "url": self.base_url + endpoint,
             "params": params,
             "headers": {"accept": self.accept_header},
+            "proxy": self.proxy,
         }
         async with self._session.get(**get_params) as response:
             response.raise_for_status()
