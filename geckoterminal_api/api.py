@@ -398,6 +398,19 @@ class GeckoTerminalAPI:
             endpoint=f"/networks/{network}/tokens/{address}/info",
         )
 
+    def network_pools_info(self, network: str, pool_address: str) -> dict:
+       """Get pool tokens info on a network
+
+       Args:
+       ----
+           network: Network id from `networks()` e.g. eth, solana, arbitrum
+           pool_address: Address of pool
+               e.g. 0x60594a405d53811d3bc4766596efd80fd545a270
+       """
+       return self._get(
+           endpoint=f"/networks/{network}/pools/{pool_address}/info"
+       )
+
     @validate(max_addresses=MAX_ADDRESSES, include_list=TOKEN_INFO_INCLUDES)
     def token_info_recently_updated(self, include: list | None = None) -> dict:
         """Get most recently updated 100 tokens info from all networks
