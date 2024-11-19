@@ -409,7 +409,7 @@ class AsyncGeckoTerminalAPI:
             endpoint=f"/networks/{network}/tokens/{address}/info",
         )
 
-    async def network_pools_info(self, network: str, pool_address: str) -> dict:
+    async def network_pool_info(self, network: str, pool_address: str) -> dict:
        """Get pool tokens info on a network
 
        Args:

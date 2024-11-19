@@ -398,7 +398,7 @@ class GeckoTerminalAPI:
             endpoint=f"/networks/{network}/tokens/{address}/info",
         )
 
-    def network_pools_info(self, network: str, pool_address: str) -> dict:
+    def network_pool_info(self, network: str, pool_address: str) -> dict:
        """Get pool tokens info on a network
 
        Args:

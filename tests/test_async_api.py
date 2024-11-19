@@ -257,3 +257,16 @@ async def test_network_pool_trades(async_client: AsyncGeckoTerminalAPI):
     assert "type" in network_pool_trades["data"][0]
     assert "attributes" in network_pool_trades["data"][0]
     await async_client.close()
+
+@pytest.mark.asyncio
+async def test_network_pool_info(async_client: AsyncGeckoTerminalAPI):
+    network_pool_info = await async_client.network_pool_info(
+        network="eth", pool_address="0x60594a405d53811d3bc4766596efd80fd545a270"
+    )
+    assert isinstance(network_pool_info, dict)
+    assert isinstance(network_pool_info["data"], list)
+    assert "data" in network_pool_info
+    assert "id" in network_pool_info["data"][0]
+    assert "type" in network_pool_info["data"][0]
+    assert "attributes" in network_pool_info["data"][0]
+    await async_client.close()
