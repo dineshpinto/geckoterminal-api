@@ -217,6 +217,7 @@ def test_network_pool_trades(client: GeckoTerminalAPI):
     assert "type" in network_pool_trades["data"][0]
     assert "attributes" in network_pool_trades["data"][0]
 
+
 def test_network_pool_info(client: GeckoTerminalAPI):
     network_pool_info = client.network_pool_info(
         network="eth", pool_address="0x60594a405d53811d3bc4766596efd80fd545a270"
@@ -227,4 +228,3 @@ def test_network_pool_info(client: GeckoTerminalAPI):
     assert "id" in network_pool_info["data"][0]
     assert "type" in network_pool_info["data"][0]
     assert "attributes" in network_pool_info["data"][0]
-

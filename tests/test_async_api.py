@@ -258,6 +258,7 @@ async def test_network_pool_trades(async_client: AsyncGeckoTerminalAPI):
     assert "attributes" in network_pool_trades["data"][0]
     await async_client.close()
 
+
 @pytest.mark.asyncio
 async def test_network_pool_info(async_client: AsyncGeckoTerminalAPI):
     network_pool_info = await async_client.network_pool_info(
