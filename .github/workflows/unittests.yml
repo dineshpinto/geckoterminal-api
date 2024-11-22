@@ -13,37 +13,37 @@ jobs:
   build:
     runs-on: "ubuntu-latest"
     strategy:
-      matrix:
-        python-version: [ "3.12" ]
       fail-fast: true
       max-parallel: 1
     env:
       PYTHON: ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Set up poetry
-        uses: Gr1N/setup-poetry@v8
+          version: "0.4.20"
       - name: Install dependencies
-        run: poetry install --with dev
+        run: uv sync --frozen --all-extras
+      - name: Format with ruff
+        run: uv run ruff format --diff
       - name: Lint with ruff
-        run: poetry run ruff check
+        run: uv run ruff check --diff
+      - name: Type check with pyright
+        run: uv run pyright
       - name: Test API
         run: |
-          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_api.py -v
+          uv run pytest -cov-report=xml --cov=geckoterminal_api tests/test_api.py -v
       - name: Test Exceptions and Validation
         run: |
-          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_exceptions.py --cov-append -v
-          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_validation.py --cov-append -v
+          uv run pytest -cov-report=xml --cov=geckoterminal_api tests/test_exceptions.py --cov-append -v
+          uv run pytest -cov-report=xml --cov=geckoterminal_api tests/test_validation.py --cov-append -v
       - name: Sleep for 60 seconds
         run: sleep 60s
         shell: bash
       - name: Test Async API
         run: |
-          poetry run pytest --cov-report=xml --cov=geckoterminal_api tests/test_async_api.py --cov-append -v
+          uv run pytest -cov-report=xml --cov=geckoterminal_api tests/test_async_api.py --cov-append -v
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
