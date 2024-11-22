@@ -85,10 +85,9 @@ class AsyncGeckoTerminalAPI:
                         err=errors,
                     )
                 case 429:
-                    rate_limit = json.loads(await response.text())["limit"]
                     raise GeckoTerminalAPIError(
                         status=response.status,
-                        err=f"Rate Limited (limit = {rate_limit})",
+                        err="Rate Limited",
                     )
                 case _:
                     raise GeckoTerminalAPIError(
