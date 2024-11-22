@@ -5,12 +5,12 @@ from functools import wraps
 from .exceptions import GeckoTerminalParameterWarning
 
 
-def validate(**limit_kwargs):
+def validate(**limit_kwargs):  # pyright: ignore [reportMissingParameterType]
     """Decorator to validate the parameters of the function"""
 
     def decorator(func: Callable):
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs):  # pyright: ignore [reportMissingParameterType]
             if "page" in kwargs and kwargs["page"] > limit_kwargs["max_page"]:
                 warnings.warn(
                     f"Maximum {limit_kwargs['max_page']} pages allowed, "

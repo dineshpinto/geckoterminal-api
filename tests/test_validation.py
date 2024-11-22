@@ -30,16 +30,16 @@ from geckoterminal_api.validation import validate
     tokens=TOKENS,
     currencies=CURRENCIES,
 )
-def func(**_kwargs):
+def func(**_kwargs) -> None:
     """Dummy function for testing parameter validation with decorators."""
 
 
-def test_page_validation():
+def test_page_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(page=MAX_PAGE + 1)
 
 
-def test_address_validation():
+def test_address_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(
             addresses=["0x60594a405d53811d3bc4766596efd80fd545a270"]
@@ -47,31 +47,31 @@ def test_address_validation():
         )
 
 
-def test_include_validation():
+def test_include_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(include=[*POOL_INCLUDES, "invalid_include"])
 
 
-def test_timeframe_validation():
+def test_timeframe_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(timeframe="invalid_timeframe")
 
 
-def test_aggregate_validation():
+def test_aggregate_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(timeframe="day", aggregate=69)
 
 
-def test_ohlcv_limit_validation():
+def test_ohlcv_limit_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(limit=OHLCV_LIMIT + 1)
 
 
-def test_currency_validation():
+def test_currency_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(currency="invalid_currency")
 
 
-def test_token_validation():
+def test_token_validation() -> None:
     with pytest.warns(GeckoTerminalParameterWarning):
         func(token="invalid_token")
