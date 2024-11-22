@@ -16,8 +16,12 @@ keywords = [
 ]
 readme = "README.md"
 authors = [{ name = "Dinesh Pinto", email = "annual.fallout_0z@icloud.com" }]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = ["aiohttp>=3.11.7", "requests>=2.32.3"]
+
+[project.urls]
+Homepage = "https://github.com/dineshpinto/geckoterminal-api"
+Repository = "https://github.com/dineshpinto/geckoterminal-api"
 
 [dependency-groups]
 dev = [
