@@ -80,7 +80,7 @@ class GeckoTerminalAPI:
             case 429:
                 raise GeckoTerminalAPIError(
                     status=response.status_code,
-                    err=f"Rate Limited (limit = {json.loads(response.text)['limit']})",
+                    err="Rate Limited",
                 )
             case _:
                 raise GeckoTerminalAPIError(
