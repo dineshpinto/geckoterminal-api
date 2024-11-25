@@ -1,5 +1,5 @@
+import datetime
 import json
-from datetime import datetime
 
 import requests
 
@@ -25,7 +25,9 @@ from .validation import validate
 class GeckoTerminalAPI:
     """RESTful Python client for GeckoTerminal API."""
 
-    def __init__(self, api_version: str | None = None, proxies: dict | None = None):
+    def __init__(
+        self, api_version: str | None = None, proxies: dict[str, str] | None = None
+    ) -> None:
         """
         Args:
         ----
@@ -39,7 +41,8 @@ class GeckoTerminalAPI:
             else "application/json"
         )
         self._session = requests.Session()
-        self._session.proxies = proxies
+        if proxies:
+            self._session.proxies = proxies
 
     def _get(self, endpoint: str, params: dict | None = None) -> dict:
         """Private method to send a GET request to the specified endpoint.
@@ -465,7 +468,7 @@ class GeckoTerminalAPI:
             "aggregate": aggregate,
             "before_timestamp": before_timestamp
             if before_timestamp
-            else int(datetime.now().timestamp()),
+            else int(datetime.datetime.now(tz=datetime.UTC).timestamp()),
             "limit": limit,
             "currency": currency,
             "token": token,

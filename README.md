@@ -1,6 +1,6 @@
 [![PyPi version](https://img.shields.io/pypi/v/geckoterminal-api)](https://pypi.python.org/pypi/geckoterminal-api/)
 [![Downloads](https://static.pepy.tech/badge/geckoterminal-api)](https://pepy.tech/project/geckoterminal-api)
-[![Python 3.10](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
+[![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![codecov](https://codecov.io/gh/dineshpinto/geckoterminal-api/graph/badge.svg?token=JQLPDDAFX0)](https://codecov.io/gh/dineshpinto/geckoterminal-api)
 [![API unittest](https://github.com/dineshpinto/geckoterminal-api/actions/workflows/unittests.yml/badge.svg)](https://github.com/dineshpinto/geckoterminal-api/actions/workflows/unittests.yml)
 

@@ -1,11 +1,15 @@
+from typing import override
+
+
 class GeckoTerminalAPIError(Exception):
     """Generic exception for API communication"""
 
-    def __init__(self, status: int, err: str):
+    def __init__(self, status: int, err: str) -> None:
         self.status = status
         self.err = err
 
-    def __str__(self):
+    @override
+    def __str__(self) -> str:
         return f"(status={self.status}) {self.err}"
 
 

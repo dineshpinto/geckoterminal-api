@@ -5,12 +5,11 @@ from geckoterminal_api.async_api import AsyncGeckoTerminalAPI
 
 @pytest.fixture(scope="module")
 def async_client() -> AsyncGeckoTerminalAPI:
-    async_api = AsyncGeckoTerminalAPI()
-    yield async_api
+    return AsyncGeckoTerminalAPI()
 
 
 @pytest.mark.asyncio
-async def test_networks(async_client: AsyncGeckoTerminalAPI):
+async def test_networks(async_client: AsyncGeckoTerminalAPI) -> None:
     networks = await async_client.networks()
     assert isinstance(networks, dict)
     assert "data" in networks
@@ -21,7 +20,7 @@ async def test_networks(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_dexes(async_client: AsyncGeckoTerminalAPI):
+async def test_dexes(async_client: AsyncGeckoTerminalAPI) -> None:
     dexes = await async_client.network_dexes(network="eth")
     assert isinstance(dexes, dict)
     assert "data" in dexes
@@ -32,7 +31,7 @@ async def test_dexes(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_trending_pools(async_client: AsyncGeckoTerminalAPI):
+async def test_trending_pools(async_client: AsyncGeckoTerminalAPI) -> None:
     trending_pools = await async_client.trending_pools()
     assert isinstance(trending_pools, dict)
     assert "data" in trending_pools
@@ -44,7 +43,7 @@ async def test_trending_pools(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_trending_pools(async_client: AsyncGeckoTerminalAPI):
+async def test_network_trending_pools(async_client: AsyncGeckoTerminalAPI) -> None:
     network_trending_pools = await async_client.network_trending_pools(network="eth")
     assert isinstance(network_trending_pools, dict)
     assert "data" in network_trending_pools
@@ -56,7 +55,7 @@ async def test_network_trending_pools(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_pool_address(async_client: AsyncGeckoTerminalAPI):
+async def test_network_pool_address(async_client: AsyncGeckoTerminalAPI) -> None:
     network_pool_address = await async_client.network_pool_address(
         network="eth", address="0x60594a405d53811d3bc4766596efd80fd545a270"
     )
@@ -69,7 +68,7 @@ async def test_network_pool_address(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_pools_multi_address(async_client: AsyncGeckoTerminalAPI):
+async def test_network_pools_multi_address(async_client: AsyncGeckoTerminalAPI) -> None:
     network_pools_multi_address = await async_client.network_pools_multi_address(
         network="eth",
         addresses=[
@@ -87,7 +86,7 @@ async def test_network_pools_multi_address(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_pools(async_client: AsyncGeckoTerminalAPI):
+async def test_network_pools(async_client: AsyncGeckoTerminalAPI) -> None:
     network_pools = await async_client.network_pools(network="eth")
     assert isinstance(network_pools, dict)
     assert "data" in network_pools
@@ -98,7 +97,7 @@ async def test_network_pools(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_dex_pools(async_client: AsyncGeckoTerminalAPI):
+async def test_network_dex_pools(async_client: AsyncGeckoTerminalAPI) -> None:
     network_dex_pools = await async_client.network_dex_pools(
         network="eth", dex="sushiswap"
     )
@@ -111,7 +110,7 @@ async def test_network_dex_pools(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_new_pools(async_client: AsyncGeckoTerminalAPI):
+async def test_network_new_pools(async_client: AsyncGeckoTerminalAPI) -> None:
     network_new_pools = await async_client.network_new_pools(network="eth")
     assert isinstance(network_new_pools, dict)
     assert "data" in network_new_pools
@@ -122,7 +121,7 @@ async def test_network_new_pools(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_new_pools(async_client: AsyncGeckoTerminalAPI):
+async def test_new_pools(async_client: AsyncGeckoTerminalAPI) -> None:
     new_pools = await async_client.new_pools()
     assert isinstance(new_pools, dict)
     assert "data" in new_pools
@@ -133,7 +132,7 @@ async def test_new_pools(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_search_network_pool(async_client: AsyncGeckoTerminalAPI):
+async def test_search_network_pool(async_client: AsyncGeckoTerminalAPI) -> None:
     search_pools = await async_client.search_network_pool(query="ETH", network="eth")
     assert isinstance(search_pools, dict)
     assert "data" in search_pools
@@ -144,7 +143,9 @@ async def test_search_network_pool(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_addresses_token_price(async_client: AsyncGeckoTerminalAPI):
+async def test_network_addresses_token_price(
+    async_client: AsyncGeckoTerminalAPI,
+) -> None:
     network_addresses_token_price = await async_client.network_addresses_token_price(
         network="eth",
         addresses=[
@@ -161,7 +162,7 @@ async def test_network_addresses_token_price(async_client: AsyncGeckoTerminalAPI
 
 
 @pytest.mark.asyncio
-async def test_network_token_pools(async_client: AsyncGeckoTerminalAPI):
+async def test_network_token_pools(async_client: AsyncGeckoTerminalAPI) -> None:
     network_token_pools = await async_client.network_token_pools(
         network="eth", token_address="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     )
@@ -174,7 +175,7 @@ async def test_network_token_pools(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_token(async_client: AsyncGeckoTerminalAPI):
+async def test_network_token(async_client: AsyncGeckoTerminalAPI) -> None:
     network_token = await async_client.network_token(
         network="eth", address="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     )
@@ -187,7 +188,9 @@ async def test_network_token(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_tokens_multi_address(async_client: AsyncGeckoTerminalAPI):
+async def test_network_tokens_multi_address(
+    async_client: AsyncGeckoTerminalAPI,
+) -> None:
     network_tokens_multi_address = await async_client.network_tokens_multi_address(
         network="eth",
         addresses=[
@@ -205,7 +208,7 @@ async def test_network_tokens_multi_address(async_client: AsyncGeckoTerminalAPI)
 
 
 @pytest.mark.asyncio
-async def test_network_tokens_address_info(async_client: AsyncGeckoTerminalAPI):
+async def test_network_tokens_address_info(async_client: AsyncGeckoTerminalAPI) -> None:
     network_tokens_address_info = await async_client.network_tokens_address_info(
         network="eth", address="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
     )
@@ -218,7 +221,7 @@ async def test_network_tokens_address_info(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_token_info_recently_updated(async_client: AsyncGeckoTerminalAPI):
+async def test_token_info_recently_updated(async_client: AsyncGeckoTerminalAPI) -> None:
     token_info_recently_updated = await async_client.token_info_recently_updated()
     assert isinstance(token_info_recently_updated, dict)
     assert "data" in token_info_recently_updated
@@ -230,7 +233,7 @@ async def test_token_info_recently_updated(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_pool_ohlcv(async_client: AsyncGeckoTerminalAPI):
+async def test_network_pool_ohlcv(async_client: AsyncGeckoTerminalAPI) -> None:
     network_pool_ohlcv = await async_client.network_pool_ohlcv(
         network="eth",
         pool_address="0x60594a405d53811d3bc4766596efd80fd545a270",
@@ -247,7 +250,7 @@ async def test_network_pool_ohlcv(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_pool_trades(async_client: AsyncGeckoTerminalAPI):
+async def test_network_pool_trades(async_client: AsyncGeckoTerminalAPI) -> None:
     network_pool_trades = await async_client.network_pool_trades(
         network="eth", pool_address="0x60594a405d53811d3bc4766596efd80fd545a270"
     )
@@ -260,7 +263,7 @@ async def test_network_pool_trades(async_client: AsyncGeckoTerminalAPI):
 
 
 @pytest.mark.asyncio
-async def test_network_pool_info(async_client: AsyncGeckoTerminalAPI):
+async def test_network_pool_info(async_client: AsyncGeckoTerminalAPI) -> None:
     network_pool_info = await async_client.network_pool_info(
         network="eth", pool_address="0x60594a405d53811d3bc4766596efd80fd545a270"
     )

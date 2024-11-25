@@ -1,59 +1,97 @@
-[tool.poetry]
+[project]
 name = "geckoterminal-api"
-version = "0.8.2"
-repository = "https://github.com/dineshpinto/geckoterminal-api"
-homepage = "https://github.com/dineshpinto/geckoterminal-api"
-license = "MIT"
-keywords = ["geckoterminal", "coingecko", "rest", "api", "async", "cryptocurrency", "bitcoin", "ethereum", "solana"]
+version = "0.9.0"
 description = "RESTful (sync + async) Python client for GeckoTerminal API"
-authors = ["dineshpinto <annual.fallout_0z@icloud.com>"]
+license = "MIT"
+keywords = [
+    "geckoterminal",
+    "coingecko",
+    "rest",
+    "api",
+    "async",
+    "cryptocurrency",
+    "bitcoin",
+    "ethereum",
+    "solana",
+]
 readme = "README.md"
-packages = [{ include = "geckoterminal_api" }]
+authors = [{ name = "Dinesh Pinto", email = "annual.fallout_0z@icloud.com" }]
+requires-python = ">=3.12"
+dependencies = ["aiohttp>=3.11.7", "requests>=2.32.3"]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-requests = "^2.31.0"
-aiohttp = "^3.9.1"
+[project.urls]
+Homepage = "https://github.com/dineshpinto/geckoterminal-api"
+Repository = "https://github.com/dineshpinto/geckoterminal-api"
 
-[tool.poetry.group.dev]
-optional = true
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.3.0"
-ruff-lsp = "^0.0.48"
-pytest = "^7.4.3"
-pytest-cov = "^4.1.0"
-pytest-asyncio = "^0.23.2"
+[dependency-groups]
+dev = [
+    "pyright>=1.1.389",
+    "pytest>=8.3.3",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.8.0",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 target-version = "py312"
 
 [tool.ruff.lint]
-extend-select = [
-    "E", # pycodestyle-error
-    "W", # pycodestyle-warning
-    "F", # pyflakes
-    "N", # pep8-naming
-    "B", # flake8-bugbear
-    "I", # isort
-    "ASYNC", # flake8-async
-    "BLE", # flake8-blind-except
-    "FBT", # flake8-boolean-trap
-    "A", # flake8-builtins
-    "C4", # flake8-comprehensions
-    "ERA", # flake8-eradicate/eradicate
-    "PIE", # flake8-pie
-    "PGH", # pygrep
-    "RUF", # ruff checks
-    "SIM", # flake8-simplify
-    "TCH", # flake8-type-checking
-    "TID", # flake8-tidy-imports
-    "UP", # pyupgrade
+select = ["ALL"]
+ignore = [
+    "D",
+    "COM812",
+    "ISC001",
+    "PLR0913",
+    "S107",
+    "ANN201",
+    "ANN002",
+    "ANN003",
+    "ANN202",
+    "C901",
 ]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"tests/**/*.py" = ["S101", "S106", "ANN003", "ANN001"]
 
 [tool.ruff.format]
 docstring-code-format = true
+
+[tool.pyright]
+include = ["geckoterminal_api/"]
+pythonVersion = "3.12"
+strictListInference = true
+strictDictionaryInference = true
+strictSetInference = true
+deprecateTypingAliases = true
+disableBytesTypePromotions = true
+reportUnusedClass = true
+reportUnusedFunction = true
+reportUntypedFunctionDecorator = true
+reportUntypedClassDecorator = true
+reportPrivateUsage = true
+reportTypeCommentUsage = true
+reportConstantRedefinition = true
+reportDeprecated = true
+reportInconsistentConstructor = true
+reportUninitializedInstanceVariable = true
+reportMissingParameterType = true
+reportCallInDefaultInitializer = true
+reportUnnecessaryIsInstance = true
+reportUnnecessaryCast = true
+reportUnnecessaryComparison = true
+reportUnnecessaryContains = true
+reportInvalidStubStatement = true
+reportUnusedExpression = true
+reportUnnecessaryTypeIgnoreComment = true
+reportMatchNotExhaustive = true
+reportImplicitOverride = true
+reportShadowedImports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests/"]
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "module"

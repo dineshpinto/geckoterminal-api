@@ -15,10 +15,6 @@ from .limits import (
 )
 
 __all__ = [
-    "GeckoTerminalAPI",
-    "AsyncGeckoTerminalAPI",
-    "GeckoTerminalAPIError",
-    "GeckoTerminalParameterWarning",
     "CURRENCIES",
     "DAY_AGGREGATES",
     "HOUR_AGGREGATES",
@@ -29,4 +25,8 @@ __all__ = [
     "POOL_INCLUDES",
     "TIMEFRAMES",
     "TOKENS",
+    "AsyncGeckoTerminalAPI",
+    "GeckoTerminalAPI",
+    "GeckoTerminalAPIError",
+    "GeckoTerminalParameterWarning",
 ]
