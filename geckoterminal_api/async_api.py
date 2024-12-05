@@ -68,7 +68,7 @@ class AsyncGeckoTerminalAPI:
                 an exception with the status code and error message.
         """
         if self._session is None:
-            self._session = aiohttp.ClientSession(raise_for_status=True)
+            self._session = aiohttp.ClientSession()
         get_params = {
             "url": self.base_url + endpoint,
             "params": params,
@@ -76,7 +76,6 @@ class AsyncGeckoTerminalAPI:
             "proxy": self.proxy,
         }
         async with self._session.get(**get_params) as response:  # pyright: ignore [reportArgumentType]
-            response.raise_for_status()
             match response.status:
                 case 200:
                     return await response.json()
