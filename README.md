@@ -6,20 +6,16 @@
 
 # GeckoTerminal API
 
-## RESTful (sync + async) Python client for GeckoTerminal API
+A lightweight Python wrapper for the [GeckoTerminal](https://www.geckoterminal.com) DeFi & DeX aggregator, supporting 90+ chains and 500+ DEXs.
 
-Wrapper around the [GeckoTerminal](https://www.geckoterminal.com) DeFi and DeX
-aggregator operating across 90+ chains and 500+ dexes.
-Features both synchronous and asynchronous APIs.
+## Key Features
 
-Features:
+- **Market Data**: Fetch price, volume, and historical charts for any token.
+- **Pool Discovery**: Identify pools trading a specific token.
+- **Candlestick Charts**: Generate OHLCV-based candlestick charts.
+- **Sync/Async support:** Supports both synchronous and asynchronous API.
 
-- Get the market data (price, volume, historical chart) of any token
-- Find all the pools that are trading a specific token
-- Plot a candlestick chart using OHLCV when given a pool address
-
-The API is currently in beta and is subject to change, please report any issues you
-find.
+> **Note:** The API is currently in beta and subject to change. Please report issues.
 
 ## Installation
 
@@ -27,47 +23,47 @@ find.
 pip install geckoterminal-api
 ```
 
-## Docs
+## Documentation
 
-See the [GeckoTerminal API docs](https://www.geckoterminal.com/dex-api) for more
-details.
+Refer to the official [GeckoTerminal API docs](https://www.geckoterminal.com/dex-api) for detailed information.
 
-## Usage
+## Quickstart
 
-### Synchronous API
+### Synchronous API Example
 
 ```python
 from geckoterminal_api import GeckoTerminalAPI
 
 gt = GeckoTerminalAPI()
-# Get a list of supported networks and their IDs
+# Fetch supported networks and their IDs
 gt.networks()
 ```
 
-### Asynchronous API
+### Asynchronous API Example
 
 ```python
 import asyncio
 from geckoterminal_api import AsyncGeckoTerminalAPI
 
 agt = AsyncGeckoTerminalAPI()
-# Get a list of supported networks and their IDs
+# Fetch supported networks and their IDs
 asyncio.run(agt.networks())
 ```
 
-## Examples
+## Usage Examples
 
-### Get trades for a specific pool
+### Fetch Trades for a Specific Pool
 
-```ipython
+```python
 # Query $ANALOS pool on Solana
->>> trades = gt.network_pool_trades(network="solana", pool="69grLw4PcSypZnn3xpsozCJFT8vs8WA5817VUVnzNGTh")
->>> for trade_data in trades["data"]:
->>>     trade = trade_data["attributes"]
->>>     print(f'{trade["block_timestamp"]} -- {trade["kind"]}: {float(trade["volume_in_usd"]):.2f} USD')
+trades = gt.network_pool_trades(network="solana", pool="69grLw4PcSypZnn3xpsozCJFT8vs8WA5817VUVnzNGTh")
+
+for trade_data in trades["data"]:
+    trade = trade_data["attributes"]
+    print(f'{trade["block_timestamp"]} -- {trade["kind"]}: {float(trade["volume_in_usd"]):.2f} USD')
 ```
 
-(truncated output)
+_(truncated output)_
 
 ```text
 2023-12-27T08:27:24Z -- buy: 0.06 USD
@@ -82,14 +78,15 @@ asyncio.run(agt.networks())
 2023-12-27T08:26:59Z -- sell: 15.31 USD
 ```
 
-### Get pools trending on a network
+### Discover Trending Pools
 
-```ipython
-# Query trending pools on Solana
->>> gt.network_trending_pools(network="solana")
+```python
+# Trending pools on Solana
+trending_pools = gt.network_trending_pools(network="solana")
+print(trending_pools)
 ```
 
-(truncated output)
+_(truncated output)_
 
 ```json
 {
@@ -127,14 +124,15 @@ asyncio.run(agt.networks())
 }
 ```
 
-### Get new pools on a network
+### Discover New Pools
 
-```ipython
-# Query new pools on Arbitrum
->>> gt.network_new_pools(network="arbitrum")
+```python
+# New pools on Arbitrum
+new_pools = gt.network_new_pools(network="arbitrum")
+print(new_pools)
 ```
 
-(truncated output)
+_(truncated output)_
 
 ```json
 {
@@ -173,12 +171,11 @@ asyncio.run(agt.networks())
 }
 ```
 
-and many more...
+_and many more..._
 
-## Proxy support
+## Proxy Support
 
-You can use the `proxies` parameter to pass a dictionary of proxy URLs to the
-synchronous API
+### Synchronous API Proxy Setup
 
 ```python
 from geckoterminal_api import GeckoTerminalAPI
@@ -190,7 +187,7 @@ proxies = {
 gt = GeckoTerminalAPI(proxies=proxies)
 ```
 
-For the asynchronous API, you can use the `proxy` parameter:
+### Asynchronous API Proxy Setup
 
 ```python
 from geckoterminal_api import AsyncGeckoTerminalAPI
