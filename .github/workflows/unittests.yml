@@ -2,9 +2,9 @@ name: unittests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -15,14 +15,12 @@ jobs:
     strategy:
       fail-fast: true
       max-parallel: 1
-    env:
-      PYTHON: ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v4
         with:
-          version: "0.4.20"
+          version: "latest"
       - name: Install dependencies
         run: uv sync --frozen --all-extras
       - name: Format with ruff
@@ -45,6 +43,6 @@ jobs:
         run: |
           uv run pytest -cov-report=xml --cov=geckoterminal_api tests/test_async_api.py --cov-append -v
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
